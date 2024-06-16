@@ -114,9 +114,9 @@ export function getDeltaTime(initialTime) {
  * @param {number} [color=0xffffff]
  * @returns {THREE.Mesh}
  */
-export function createCubeBasicMesh(length = 1, color = 0xffffff) {
+export function createMeshBasicCube(length = 1, color = 0xffffff) {
 	return new THREE.Mesh(
 		new THREE.BoxGeometry(length, length, length),
-		new THREE.MeshBasicMaterial({})
+		new THREE.MeshBasicMaterial({ color })
 	);
 }
