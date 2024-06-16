@@ -142,13 +142,22 @@
 			y: Math.PI,
 			ease: 'none'
 		});
-		gsap.from(cube3.position, {
-			duration: 1,
-			delay: 1,
-			x: 4
-		});
 
-		gsap.timeline();
+		const cube3Timeline = gsap.timeline({
+			repeat: -1
+		});
+		cube3Timeline
+			.from(cube3.position, {
+				duration: 2,
+				// delay: 1,
+				x: 4,
+				ease: 'bounce.out'
+			})
+			.to(cube3.position, {
+				duration: 2,
+				x: 4,
+				ease: 'bounce.out'
+			});
 
 		function tick() {
 			renderer.render(scene, camera);
