@@ -11,6 +11,7 @@
 			<Menubar.Separator />
 			<a href="/lesson-04"><Menubar.Item>04 - Transform Objects</Menubar.Item></a>
 			<a href="/lesson-05"><Menubar.Item>05 - Animation</Menubar.Item></a>
+			<a href="/lesson-06"><Menubar.Item>06 - Cameras</Menubar.Item></a>
 		</Menubar.Content>
 	</Menubar.Menu>
 </Menubar.Root>
