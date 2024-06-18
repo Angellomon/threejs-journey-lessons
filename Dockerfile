@@ -9,7 +9,6 @@ RUN npm install
 RUN npm run build
 
 
-FROM caddy:2.8 as webserver
+FROM nginx:alpine as webserver
 
-COPY --from=build /threejs-journey/build /var/www/html
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY --from=build /threejs-journey/build /usr/share/nginx/html
