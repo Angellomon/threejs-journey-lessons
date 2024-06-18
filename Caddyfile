@@ -1,0 +1,4 @@
+threejs-journey.angellos.net {
+    root * /var/www/html
+    file_server
+}

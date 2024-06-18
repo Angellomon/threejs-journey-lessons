@@ -11,6 +11,5 @@ RUN npm run build
 
 FROM caddy:2.8 as webserver
 
-COPY --from=build /threejs-journey/build ./
-
-CMD ["caddy", "file-server"]
+COPY --from=build /threejs-journey/build /var/www/html
+COPY Caddyfile /etc/caddy/Caddyfile
