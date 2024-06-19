@@ -4,6 +4,7 @@
 	import * as THREE from 'three';
 	import GUI from 'lil-gui';
 	import { browser } from '$app/environment';
+	import gsap from 'gsap';
 
 	/** @type {HTMLCanvasElement}*/
 	let canvasPerspectiveCamera;
@@ -16,9 +17,16 @@
 		const perspectiveCameraGUI = gui.addFolder('Perspective Camera');
 		const orthographicCameraGUI = gui.addFolder('Orthographic Camera');
 
-		let cube = createMeshBasicCube(1, 0xff0000);
-
 		function setupPerspectiveCameraScene() {
+			let cube = createMeshBasicCube(1, 0xff0000);
+
+			gsap.to(cube.rotation, {
+				y: Math.PI,
+				duration: 3,
+				ease: 'none',
+				repeat: -1
+			});
+
 			const cameraSizes = newSizes();
 			const cameraSettings = {
 				fov: 75,
@@ -77,10 +85,56 @@
 				window.requestAnimationFrame(tick);
 			}
 
-			tick();
+			window.requestAnimationFrame(tick);
 		}
 
-		function setupOrthographicCameraScene() {}
+		function setupOrthographicCameraScene() {
+			let cube = createMeshBasicCube(1, 0xff0000);
+
+			gsap.to(cube.rotation, {
+				y: Math.PI,
+				duration: 3,
+				ease: 'none',
+				repeat: -1
+			});
+
+			const cameraSizes = newSizes();
+			const cameraSettings = {
+				left: -1 * cameraSizes.aspect(),
+				right: 1 * cameraSizes.aspect(),
+				top: 1,
+				bottom: -1,
+				near: 0.1,
+				far: 69
+			};
+
+			const camera = new THREE.OrthographicCamera(
+				cameraSettings.left,
+				cameraSettings.right,
+				cameraSettings.top,
+				cameraSettings.bottom,
+				cameraSettings.near,
+				cameraSettings.far
+			);
+
+			camera.position.z = 5;
+
+			const renderer = new THREE.WebGLRenderer({
+				canvas: canvasOrthographicCamera
+			});
+
+			renderer.setSize(cameraSizes.width, cameraSizes.height);
+
+			const scene = new THREE.Scene();
+			scene.add(cube);
+
+			function tick() {
+				renderer.render(scene, camera);
+
+				window.requestAnimationFrame(tick);
+			}
+			window.requestAnimationFrame(tick);
+		}
 
 		onMount(() => {
 			setupPerspectiveCameraScene();
