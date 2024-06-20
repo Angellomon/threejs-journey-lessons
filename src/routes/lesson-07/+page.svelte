@@ -75,4 +75,8 @@
 	}
 </script>
 
+<svelte:head>
+	<title>07 - Fullscreen & resizing</title>
+</svelte:head>
+
 <canvas bind:this={canvas}></canvas>

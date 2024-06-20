@@ -264,6 +264,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>06 - Cameras</title>
+</svelte:head>
+
 <h1>Perpective Camera (with OrbitControls)</h1>
 <canvas bind:this={canvasPerspectiveCamera}></canvas>
 

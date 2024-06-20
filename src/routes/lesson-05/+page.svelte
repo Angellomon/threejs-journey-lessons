@@ -174,6 +174,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>05 - Animations</title>
+</svelte:head>
+
 <h1>Non GSAP Way</h1>
 <canvas bind:this={canvasNonGSAP}></canvas>
 <h1>GSAP Way</h1>
