@@ -3,7 +3,9 @@
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 	import { onMount } from 'svelte';
-	import { createMeshBasicCube, newSizes } from '$lib/utils';
+	import { createMeshBox, newSizes } from '$lib/utils';
+	import { GUI } from 'lil-gui';
+	import gsap from 'gsap';
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -13,14 +15,37 @@
 	if (browser) {
 		const menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
+		const gui = new GUI();
+		const boxGUI = gui.addFolder('Box');
+
 		function setupScene() {
 			const scene = new THREE.Scene();
 
 			const cubesGroup = new THREE.Group();
 			scene.add(cubesGroup);
 
-			const redCube = createMeshBasicCube(1, 0xff0000);
+			const redCube = createMeshBox({
+				width: 1,
+				height: 2,
+				depth: 3,
+				wireframe: true,
+				segments: {
+					width: 2,
+					height: 2,
+					depth: 2
+				},
+				color: 0xff0000
+			});
 			cubesGroup.add(redCube);
+
+			const redCubeTimeline = gsap.timeline({
+				repeat: -1
+			});
+			redCubeTimeline.to(redCube.rotation, {
+				y: Math.PI,
+				duration: 3,
+				ease: 'none'
+			});
 
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
 
