@@ -51,7 +51,9 @@
 			window.addEventListener('resize', () => {
 				// @ts-ignore
 				const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
 				cameraSizes.width = window.innerWidth;
+
 				if (!isFullscreen) cameraSizes.height = window.innerHeight - menuHeight;
 				else cameraSizes.height = window.innerHeight;
 
