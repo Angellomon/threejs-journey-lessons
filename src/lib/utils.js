@@ -114,9 +114,56 @@ export function getDeltaTime(initialTime) {
  * @param {number} [color=0xffffff]
  * @returns {THREE.Mesh}
  */
-export function createMeshBasicCube(length = 1, color = 0xffffff) {
+export function createMeshBasicCube(length = 1, color = 0xffffff, wireframe = false) {
 	return new THREE.Mesh(
 		new THREE.BoxGeometry(length, length, length),
-		new THREE.MeshBasicMaterial({ color })
+		new THREE.MeshBasicMaterial({ color, wireframe })
+	);
+}
+
+/**
+ * @typedef {{
+ * 	width: number,
+ * 	height: number,
+ * 	depth: number,
+ * 	color: number,
+ *  wireframe: boolean,
+ *  segments: {
+ * 	  width: number,
+ *    height: number,
+ *    depth: number,
+ *  }
+ * }} BoxOptions
+ *
+ * @export
+ * @param {BoxOptions} options
+ */
+export function createMeshBox(
+	options = {
+		color: 0xffffff,
+		width: 1,
+		height: 1,
+		depth: 1,
+		wireframe: false,
+		segments: {
+			width: 1,
+			height: 1,
+			depth: 1
+		}
+	}
+) {
+	return new THREE.Mesh(
+		new THREE.BoxGeometry(
+			options.width,
+			options.height,
+			options.depth,
+			options.segments.width,
+			options.segments.height,
+			options.segments.depth
+		),
+		new THREE.MeshBasicMaterial({
+			color: options.color,
+			wireframe: options.wireframe
+		})
 	);
 }
