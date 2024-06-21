@@ -25,6 +25,9 @@
 
 				<a href="/lesson-08"><Menubar.Item>08 - Geometries</Menubar.Item></a>
 				<Menubar.Separator />
+
+				<a href="/lesson-09"><Menubar.Item>09 - Debug UI</Menubar.Item></a>
+				<Menubar.Separator />
 			</Menubar.Content>
 		</Menubar.Menu>
 	</Menubar.Root>
