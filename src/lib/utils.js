@@ -167,3 +167,27 @@ export function createMeshBox(
 		})
 	);
 }
+
+/**
+ * Create Mesh from positions array
+ *
+ * @export
+ * @param {Float32Array} array
+ * @param {number} size
+ * @param {number} color
+ * @param {boolean} wireframe
+ */
+export function createMeshPositionsArray(array, size, color, wireframe) {
+	const attr = new THREE.BufferAttribute(array, size);
+	const geo = new THREE.BufferGeometry();
+
+	geo.setAttribute('position', attr);
+
+	return new THREE.Mesh(
+		geo,
+		new THREE.MeshBasicMaterial({
+			color,
+			wireframe
+		})
+	);
+}
