@@ -177,7 +177,7 @@ export function createMeshBox(
  * @param {number} color
  * @param {boolean} wireframe
  */
-export function createMeshPositionsArray(array, size, color, wireframe) {
+export function createMeshPositionsArray(array, size, color = 0xffffff, wireframe = false) {
 	const attr = new THREE.BufferAttribute(array, size);
 	const geo = new THREE.BufferGeometry();
 
