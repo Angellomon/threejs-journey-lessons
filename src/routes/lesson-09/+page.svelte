@@ -120,4 +120,8 @@
 	}
 </script>
 
+<svelte:head>
+	<title>09 - Debug UI</title>
+</svelte:head>
+
 <canvas bind:this={canvas}></canvas>
