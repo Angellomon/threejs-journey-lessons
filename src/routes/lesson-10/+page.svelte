@@ -1,6 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
-	import { createMeshTextureCube, newSizes } from '$lib/utils';
+	import { createMeshBasicTexture, createMeshTextureCube, newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -34,8 +34,10 @@
 		function setupScene() {
 			const scene = new THREE.Scene();
 
-			const cube = createMeshTextureCube({
-				map: texture
+			const cube = createMeshBasicTexture({
+				shape: 'cube',
+				texture,
+				radius: 1
 			});
 			scene.add(cube);
 
