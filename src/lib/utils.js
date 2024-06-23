@@ -188,6 +188,55 @@ export function createMeshTextureCube(options) {
 }
 
 /**
+ * Description placeholder
+ *
+ * @export
+ * @param {Object} params
+ * @param {"cube" | "sphere" | "circle" | "cone" | "tetrahedron"} [params.shape="cube"]
+ * @param {number} [params.length=1]
+ * @param {number} [params.radius=1]
+ * @param {number} [params.height=1]
+ * @param {number} [params.segments=1]
+ * @param {number} [params.detail=0]
+ * @param {THREE.Texture} params.texture
+ */
+export function createMeshBasicTexture(params) {
+	const {
+		shape = 'cube',
+		length = 1,
+		radius = 1,
+		height = 1,
+		segments = 1,
+		detail = 0,
+		texture
+	} = params;
+
+	/**@type{THREE.BufferGeometry}*/
+	let geometry;
+
+	if (shape === 'sphere') {
+		geometry = new THREE.SphereGeometry(length, segments);
+	} else if (shape === 'cube') {
+		geometry = new THREE.BoxGeometry(1, 1, 1, segments);
+	} else if (shape === 'circle') {
+		geometry = new THREE.CircleGeometry(radius, segments);
+	} else if (shape === 'cone') {
+		geometry = new THREE.ConeGeometry(radius, height, segments);
+	} else if (shape === 'tetrahedron') {
+		geometry = new THREE.TetrahedronGeometry(radius, detail);
+	} else {
+		geometry = geometry = new THREE.BoxGeometry(1, 1, 1, segments);
+	}
+
+	return new THREE.Mesh(
+		geometry,
+		new THREE.MeshBasicMaterial({
+			map: texture
+		})
+	);
+}
+
+/**
  * Create Mesh from positions array
  *
  * @export
