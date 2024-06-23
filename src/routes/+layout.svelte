@@ -28,6 +28,9 @@
 
 				<a href="/lesson-09"><Menubar.Item>09 - Debug UI</Menubar.Item></a>
 				<Menubar.Separator />
+
+				<a href="/lesson-10"><Menubar.Item>10 - Materials</Menubar.Item></a>
+				<Menubar.Separator />
 			</Menubar.Content>
 		</Menubar.Menu>
 	</Menubar.Root>
