@@ -169,6 +169,25 @@ export function createMeshBox(
 }
 
 /**
+ * Creates a basic cube with a texture
+ *
+ * @export
+ * @param {Object} options
+ * @param {THREE.Texture} options.map
+ * @param {number} [options.length=1]
+ */
+export function createMeshTextureCube(options) {
+	const { length = 1, map } = options;
+
+	return new THREE.Mesh(
+		new THREE.BoxGeometry(length, length, length),
+		new THREE.MeshBasicMaterial({
+			map
+		})
+	);
+}
+
+/**
  * Create Mesh from positions array
  *
  * @export

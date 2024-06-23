@@ -1,6 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
-	import { createMeshBasicCube, newSizes } from '$lib/utils';
+	import { createMeshTextureCube, newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -11,10 +11,32 @@
 	if (browser) {
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
+		const loadingManager = new THREE.LoadingManager();
+
+		loadingManager.onStart = () => {
+			console.log('on start');
+		};
+		loadingManager.onProgress = () => {
+			console.log('on progress');
+		};
+		loadingManager.onLoad = () => {
+			console.log('on load');
+		};
+		loadingManager.onError = () => {
+			console.log('on error');
+		};
+
+		const textureLoader = new THREE.TextureLoader(loadingManager);
+
+		const texture = textureLoader.load('/textures/muta-meme.jpeg');
+		texture.colorSpace = THREE.SRGBColorSpace;
+
 		function setupScene() {
 			const scene = new THREE.Scene();
 
-			const cube = createMeshBasicCube(1, 0xff0000);
+			const cube = createMeshTextureCube({
+				map: texture
+			});
 			scene.add(cube);
 
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
