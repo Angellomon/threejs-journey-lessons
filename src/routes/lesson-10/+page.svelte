@@ -28,8 +28,47 @@
 
 		const textureLoader = new THREE.TextureLoader(loadingManager);
 
-		const texture = textureLoader.load('/textures/muta-meme.jpeg');
+		const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+		const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+		const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+		const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
+		const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+		const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+		const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+
+		const checkerboard1024Texture = textureLoader.load('/textures/checkerboard-1024x1024.png');
+		const checkerboard8Texture = textureLoader.load('/textures/checkerboard-8x8.png');
+
+		const minecraftTexture = textureLoader.load('/textures/minecraft.png');
+
+		/**@type{THREE.Texture}*/
+		let texture;
+
+		// texture = doorColorTexture
+		texture = minecraftTexture;
+		// texture = checkerboard1024Texture;
+		// texture = checkerboard8Texture;
+
+		texture.generateMipmaps = false;
 		texture.colorSpace = THREE.SRGBColorSpace;
+		texture.minFilter = THREE.NearestFilter;
+		texture.magFilter = THREE.NearestFilter;
+
+		doorColorTexture.repeat.x = 2;
+		doorColorTexture.repeat.y = 3;
+
+		doorColorTexture.wrapS = THREE.RepeatWrapping;
+		doorColorTexture.wrapT = THREE.RepeatWrapping;
+
+		doorColorTexture.offset.x = 0.5;
+		doorColorTexture.offset.y = 0.5;
+
+		doorColorTexture.rotation = Math.PI * 0.5;
+
+		doorColorTexture.center.x = 0.5;
+		doorColorTexture.center.y = 0.5;
+
+		doorColorTexture.minFilter = THREE.LinearFilter;
 
 		function setupScene() {
 			const scene = new THREE.Scene();
