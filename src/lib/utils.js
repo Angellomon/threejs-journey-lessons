@@ -192,13 +192,21 @@ export function createMeshTextureCube(options) {
  *
  * @export
  * @param {Object} params
- * @param {"cube" | "sphere" | "circle" | "cone" | "tetrahedron"} [params.shape="cube"]
+ * @param {"cube" | "sphere" | "circle" | "cone" | "tetrahedron" | "torus" | "plane"} [params.shape="cube"]
  * @param {number} [params.length=1]
  * @param {number} [params.radius=1]
  * @param {number} [params.height=1]
+ * @param {number} [params.width=1]
+ * @param {number} [params.tube=1]
  * @param {number} [params.segments=1]
+ * @param {number} [params.widthSegments=1]
+ * @param {number} [params.heightSegments=1]
+ * @param {number} [params.depthSegments=1]
+ * @param {number} [params.radialSegments=1]
+ * @param {number} [params.tubularSegments=1]
+ * @param {number} [params.arc=1]
  * @param {number} [params.detail=0]
- * @param {THREE.Texture} params.texture
+ * @param {THREE.Material} params.material
  */
 export function createMeshBasicTexture(params) {
 	const {
@@ -206,34 +214,41 @@ export function createMeshBasicTexture(params) {
 		length = 1,
 		radius = 1,
 		height = 1,
+		width = 1,
 		segments = 1,
+		widthSegments = 1,
+		heightSegments = 1,
+		depthSegments = 1,
+		tube = 1,
+		radialSegments = 1,
+		tubularSegments = 1,
+		arc = 1,
 		detail = 0,
-		texture
+		material
 	} = params;
 
 	/**@type{THREE.BufferGeometry}*/
 	let geometry;
 
 	if (shape === 'sphere') {
-		geometry = new THREE.SphereGeometry(length, segments);
+		geometry = new THREE.SphereGeometry(length, widthSegments, heightSegments);
 	} else if (shape === 'cube') {
-		geometry = new THREE.BoxGeometry(1, 1, 1, segments);
+		geometry = new THREE.BoxGeometry(length, length, length, segments);
 	} else if (shape === 'circle') {
 		geometry = new THREE.CircleGeometry(radius, segments);
 	} else if (shape === 'cone') {
 		geometry = new THREE.ConeGeometry(radius, height, segments);
 	} else if (shape === 'tetrahedron') {
 		geometry = new THREE.TetrahedronGeometry(radius, detail);
+	} else if (shape === 'torus') {
+		geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments, arc);
+	} else if (shape === 'plane') {
+		geometry = new THREE.PlaneGeometry(width, height, widthSegments, heightSegments);
 	} else {
 		geometry = geometry = new THREE.BoxGeometry(1, 1, 1, segments);
 	}
 
-	return new THREE.Mesh(
-		geometry,
-		new THREE.MeshBasicMaterial({
-			map: texture
-		})
-	);
+	return new THREE.Mesh(geometry, material);
 }
 
 /**
