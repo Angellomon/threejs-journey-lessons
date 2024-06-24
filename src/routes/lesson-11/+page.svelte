@@ -3,7 +3,7 @@
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { newSizes } from '$lib/utils';
+	import { createMeshBasicTexture, newSizes } from '$lib/utils';
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -11,8 +11,34 @@
 	if (browser) {
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
+		const material = new THREE.MeshBasicMaterial({});
+
 		function setupScene() {
 			const scene = new THREE.Scene();
+
+			const sphere = createMeshBasicTexture({
+				shape: 'sphere',
+				length: 0.5,
+				widthSegments: 16,
+				heightSegments: 16,
+				material
+			});
+
+			const plane = createMeshBasicTexture({
+				shape: 'plane',
+				width: 1,
+				height: 1,
+				material
+			});
+
+			const torus = createMeshBasicTexture({
+				shape: 'torus',
+				radius: 0.3,
+				tube: 0.2,
+				radialSegments: 16,
+				tubularSegments: 16,
+				material
+			});
 
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
 
@@ -26,7 +52,19 @@
 
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
 
+			const clock = new THREE.Clock();
+
 			function tick() {
+				const elapsedTime = clock.getElapsedTime();
+
+				sphere.rotation.y = 0.1 * elapsedTime;
+				plane.rotation.y = 0.1 * elapsedTime;
+				torus.rotation.y = 0.1 * elapsedTime;
+
+				sphere.rotation.x = 0.15 * elapsedTime;
+				plane.rotation.x = 0.15 * elapsedTime;
+				torus.rotation.x = 0.15 * elapsedTime;
+
 				renderer.render(scene, camera);
 
 				controls.update();

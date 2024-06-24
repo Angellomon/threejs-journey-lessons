@@ -75,7 +75,9 @@
 
 			const cube = createMeshBasicTexture({
 				shape: 'cube',
-				texture,
+				material: new THREE.MeshBasicMaterial({
+					map: texture
+				}),
 				radius: 1
 			});
 			scene.add(cube);
