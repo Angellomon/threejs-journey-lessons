@@ -104,4 +104,8 @@
 	}
 </script>
 
+<svelte:head>
+	<title>11 - Materials</title>
+</svelte:head>
+
 <canvas bind:this={canvas}></canvas>
