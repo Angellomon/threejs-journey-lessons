@@ -32,7 +32,7 @@
 				<a href="/lesson-10"><Menubar.Item>10 - Textures</Menubar.Item></a>
 				<Menubar.Separator />
 
-				<a href="/lesson-11"><Menubar.Item>10 - Materials</Menubar.Item></a>
+				<a href="/lesson-11"><Menubar.Item>11 - Materials</Menubar.Item></a>
 				<Menubar.Separator />
 			</Menubar.Content>
 		</Menubar.Menu>

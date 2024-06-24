@@ -222,7 +222,7 @@ export function createMeshBasicTexture(params) {
 		tube = 1,
 		radialSegments = 1,
 		tubularSegments = 1,
-		arc = 1,
+		arc = 7,
 		detail = 0,
 		material
 	} = params;

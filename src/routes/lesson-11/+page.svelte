@@ -11,10 +11,16 @@
 	if (browser) {
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
-		const material = new THREE.MeshBasicMaterial({});
+		const material = new THREE.MeshBasicMaterial({
+			side: THREE.DoubleSide
+		});
 
 		function setupScene() {
 			const scene = new THREE.Scene();
+
+			const shapesGroup = new THREE.Group();
+
+			scene.add(shapesGroup);
 
 			const sphere = createMeshBasicTexture({
 				shape: 'sphere',
@@ -24,6 +30,10 @@
 				material
 			});
 
+			sphere.position.x = -1.5;
+
+			shapesGroup.add(sphere);
+
 			const plane = createMeshBasicTexture({
 				shape: 'plane',
 				width: 1,
@@ -31,18 +41,28 @@
 				material
 			});
 
+			plane.position.x = 0;
+
+			shapesGroup.add(plane);
+
 			const torus = createMeshBasicTexture({
 				shape: 'torus',
 				radius: 0.3,
 				tube: 0.2,
 				radialSegments: 16,
-				tubularSegments: 16,
+				tubularSegments: 32,
+				arc: 7,
 				material
 			});
+
+			torus.position.x = 1.5;
+
+			shapesGroup.add(torus);
 
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
 
 			const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
+			camera.position.z = 5;
 
 			const controls = new OrbitControls(camera, canvas);
 
