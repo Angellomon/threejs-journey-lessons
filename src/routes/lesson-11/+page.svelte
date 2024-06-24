@@ -11,12 +11,78 @@
 	if (browser) {
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
-		const material = new THREE.MeshBasicMaterial({
-			side: THREE.DoubleSide
-		});
-
 		function setupScene() {
+			const textureLoader = new THREE.TextureLoader();
+
+			const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+			const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+			const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+			const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+			const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
+			const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+			const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+
+			const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+
+			const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
+
+			doorColorTexture.colorSpace = THREE.SRGBColorSpace;
+			matcapTexture.colorSpace = THREE.SRGBColorSpace;
+
+			const basicMaterial = new THREE.MeshBasicMaterial({
+				map: doorColorTexture
+			});
+
+			const normalMaterial = new THREE.MeshNormalMaterial();
+
+			const matcapMaterial = new THREE.MeshMatcapMaterial({
+				matcap: matcapTexture
+			});
+
+			const depthMaterial = new THREE.MeshDepthMaterial();
+
+			const lambertMaterial = new THREE.MeshLambertMaterial({});
+
+			const phongMaterial = new THREE.MeshPhongMaterial();
+			phongMaterial.shininess = 100;
+			phongMaterial.specular = new THREE.Color(0x1188ff);
+
+			const toonMaterial = new THREE.MeshToonMaterial();
+			toonMaterial.gradientMap = gradientTexture;
+			gradientTexture.magFilter = THREE.NearestFilter;
+			gradientTexture.minFilter = THREE.NearestFilter;
+			gradientTexture.generateMipmaps = false;
+
+			const standardMaterial = new THREE.MeshStandardMaterial();
+			standardMaterial.metalness = 0.45;
+			standardMaterial.roughness = 0.65;
+
+			/**@type{THREE.Material}*/
+			let shapesMaterial;
+
+			// shapesMaterial = basicMaterial;
+			// shapesMaterial = normalMaterial;
+			// shapesMaterial = matcapMaterial;
+			// shapesMaterial = depthMaterial;
+			// shapesMaterial = lambertMaterial;
+			// shapesMaterial = phongMaterial;
+			// shapesMaterial = toonMaterial;
+			shapesMaterial = standardMaterial;
+
+			shapesMaterial.side = THREE.DoubleSide;
+
 			const scene = new THREE.Scene();
+
+			const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+
+			scene.add(ambientLight);
+
+			const pointLight = new THREE.PointLight(0xffffff, 30);
+			pointLight.position.x = 2;
+			pointLight.position.y = 3;
+			pointLight.position.z = 4;
+
+			scene.add(pointLight);
 
 			const shapesGroup = new THREE.Group();
 
@@ -27,7 +93,7 @@
 				length: 0.5,
 				widthSegments: 16,
 				heightSegments: 16,
-				material
+				material: shapesMaterial
 			});
 
 			sphere.position.x = -1.5;
@@ -38,7 +104,7 @@
 				shape: 'plane',
 				width: 1,
 				height: 1,
-				material
+				material: shapesMaterial
 			});
 
 			plane.position.x = 0;
@@ -52,7 +118,7 @@
 				radialSegments: 16,
 				tubularSegments: 32,
 				arc: 7,
-				material
+				material: shapesMaterial
 			});
 
 			torus.position.x = 1.5;
