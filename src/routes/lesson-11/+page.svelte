@@ -7,7 +7,7 @@
 	import { createMeshBasicTexture, newSizes } from '$lib/utils';
 	import { GUI } from 'lil-gui';
 
-	/**@typedef {"basic" | "matcap" | "normal" | "depth" | "lambert" | "phong" | "toon" | "standard"} MaterialType*/
+	/**@typedef {"basic" | "matcap" | "normal" | "depth" | "lambert" | "phong" | "toon" | "standard" | "physical"} MaterialType*/
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -80,6 +80,26 @@
 			standardMaterial.displacementMap = doorHeightTexture;
 			standardMaterial.roughnessMap = doorRoughnessTexture;
 			standardMaterial.metalnessMap = doorMetalnessTexture;
+			standardMaterial.transparent = true;
+
+			const physicalMaterial = new THREE.MeshPhysicalMaterial({
+				side: THREE.DoubleSide
+			});
+			physicalMaterial.metalness = 0.45;
+			physicalMaterial.roughness = 0.65;
+			physicalMaterial.map = doorColorTexture;
+			physicalMaterial.alphaMap = doorAlphaTexture;
+			physicalMaterial.normalMap = doorNormalTexture;
+			physicalMaterial.aoMap = doorAmbientOcclusionTexture;
+			physicalMaterial.displacementMap = doorHeightTexture;
+			physicalMaterial.roughnessMap = doorRoughnessTexture;
+			physicalMaterial.metalnessMap = doorMetalnessTexture;
+			physicalMaterial.transparent = true;
+
+			physicalMaterial.normalScale.set(0.5, 0.5);
+
+			physicalMaterial.clearcoat = 1;
+			physicalMaterial.clearcoatRoughness = 0;
 
 			/**@type{THREE.Material}*/
 			let shapesMaterial;
@@ -91,9 +111,9 @@
 			// shapesMaterial = lambertMaterial;
 			// shapesMaterial = phongMaterial;
 			// shapesMaterial = toonMaterial;
-			shapesMaterial = standardMaterial;
+			shapesMaterial = physicalMaterial;
 
-			shapesMaterial.side = THREE.DoubleSide;
+			// shapesMaterial.side = THREE.DoubleSide;
 
 			const gui = new GUI();
 
@@ -108,7 +128,7 @@
 			const debugObject = {
 				metalness: 0.45,
 				roughness: 0.65,
-				material: 'standard',
+				material: 'physical',
 				aoMapIntensity: 1,
 				displacementScale: 1,
 				materials: {
@@ -144,6 +164,8 @@
 						return standardMaterial;
 					case 'toon':
 						return toonMaterial;
+					case 'physical':
+						return physicalMaterial;
 					default:
 						return basicMaterial;
 				}
@@ -157,7 +179,8 @@
 				'lambert',
 				'phong',
 				'toon',
-				'standard'
+				'standard',
+				'physical'
 			];
 
 			gui
@@ -166,7 +189,7 @@
 				.max(1)
 				.step(0.01)
 				.onChange((/**@type{number}*/ newMetalness) => {
-					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 					mat.metalness = newMetalness;
 				});
 			gui
@@ -175,7 +198,7 @@
 				.max(1)
 				.step(0.01)
 				.onChange((/**@type{number}*/ newRoughness) => {
-					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 					mat.roughness = newRoughness;
 				});
 			gui
@@ -184,7 +207,7 @@
 				.max(3)
 				.step(0.01)
 				.onChange((/**@type{number}*/ newAOMapIntensity) => {
-					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 					mat.aoMapIntensity = newAOMapIntensity;
 				});
 			gui
@@ -193,9 +216,26 @@
 				.max(1)
 				.step(0.01)
 				.onChange((/**@type{number}*/ newDisplacementScale) => {
-					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 					mat.displacementScale = newDisplacementScale;
 				});
+
+			gui.add(physicalMaterial, 'clearcoat').min(0).max(1).step(0.01);
+			gui.add(physicalMaterial, 'clearcoatRoughness').min(0).max(1).step(0.01);
+
+			gui.add(physicalMaterial, 'sheen').min(0).max(1).step(0.01);
+			gui.add(physicalMaterial, 'sheenRoughness').min(0).max(1).step(0.01);
+			gui.addColor(physicalMaterial, 'sheenColor');
+
+			gui.add(physicalMaterial, 'iridescence').min(0).max(1).step(0.01);
+			gui.add(physicalMaterial, 'iridescenceIOR').min(0).max(2.33).step(0.01);
+			gui.add(physicalMaterial.iridescenceThicknessRange, '0').min(0).max(1000).step(1);
+			gui.add(physicalMaterial.iridescenceThicknessRange, '1').min(0).max(1000).step(1);
+
+			gui.add(physicalMaterial, 'transmission').min(0).max(1).step(0.01);
+			gui.add(physicalMaterial, 'ior').min(1).max(10).step(0.01);
+			gui.add(physicalMaterial, 'thickness').min(0).max(1).step(0.01);
+
 			gui
 				.add(debugObject, 'material', materialTypes)
 				.onChange((/**@type{MaterialType}*/ newMaterialType) => {
@@ -207,49 +247,49 @@
 				});
 
 			gui.add(debugObject.materials, 'color').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.map = null;
 				else mat.map = doorColorTexture;
 
 				mat.needsUpdate = true;
 			});
 			gui.add(debugObject.materials, 'alpha').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.alphaMap = null;
 				else mat.alphaMap = doorAlphaTexture;
 
 				mat.needsUpdate = true;
 			});
 			gui.add(debugObject.materials, 'normal').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.normalMap = null;
 				else mat.normalMap = doorNormalTexture;
 
 				mat.needsUpdate = true;
 			});
 			gui.add(debugObject.materials, 'ambientOcclusion').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.aoMap = null;
 				else mat.aoMap = doorAmbientOcclusionTexture;
 
 				mat.needsUpdate = true;
 			});
 			gui.add(debugObject.materials, 'displacement').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.displacementMap = null;
 				else mat.displacementMap = doorHeightTexture;
 
 				mat.needsUpdate = true;
 			});
 			gui.add(debugObject.materials, 'roughness').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.roughnessMap = null;
 				else mat.roughnessMap = doorRoughnessTexture;
 
 				mat.needsUpdate = true;
 			});
 			gui.add(debugObject.materials, 'metalness').onChange((/**@type{boolean}*/ show) => {
-				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial(debugObject.material));
 				if (!show) mat.metalnessMap = null;
 				else mat.metalnessMap = doorMetalnessTexture;
 
