@@ -74,8 +74,12 @@
 			standardMaterial.metalness = 0.45;
 			standardMaterial.roughness = 0.65;
 			standardMaterial.map = doorColorTexture;
+			standardMaterial.alphaMap = doorAlphaTexture;
+			standardMaterial.normalMap = doorNormalTexture;
 			standardMaterial.aoMap = doorAmbientOcclusionTexture;
 			standardMaterial.displacementMap = doorHeightTexture;
+			standardMaterial.roughnessMap = doorRoughnessTexture;
+			standardMaterial.metalnessMap = doorMetalnessTexture;
 
 			/**@type{THREE.Material}*/
 			let shapesMaterial;
@@ -98,14 +102,24 @@
 			 * roughness: number,
 			 * material: MaterialType,
 			 * aoMapIntensity: number,
-			 * displacementScale: number
+			 * displacementScale: number,
+			 * materials: Record<string, boolean>
 			 * }}*/
 			const debugObject = {
 				metalness: 0.45,
 				roughness: 0.65,
 				material: 'standard',
 				aoMapIntensity: 1,
-				displacementScale: 0.1
+				displacementScale: 1,
+				materials: {
+					color: true,
+					alpha: true,
+					normal: true,
+					ambientOcclusion: true,
+					displacement: true,
+					roughness: true,
+					metalness: true
+				}
 			};
 
 			/**
@@ -192,7 +206,55 @@
 					torus.material = newMaterial;
 				});
 
-			gui.add;
+			gui.add(debugObject.materials, 'color').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.map = null;
+				else mat.map = doorColorTexture;
+
+				mat.needsUpdate = true;
+			});
+			gui.add(debugObject.materials, 'alpha').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.alphaMap = null;
+				else mat.alphaMap = doorAlphaTexture;
+
+				mat.needsUpdate = true;
+			});
+			gui.add(debugObject.materials, 'normal').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.normalMap = null;
+				else mat.normalMap = doorNormalTexture;
+
+				mat.needsUpdate = true;
+			});
+			gui.add(debugObject.materials, 'ambientOcclusion').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.aoMap = null;
+				else mat.aoMap = doorAmbientOcclusionTexture;
+
+				mat.needsUpdate = true;
+			});
+			gui.add(debugObject.materials, 'displacement').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.displacementMap = null;
+				else mat.displacementMap = doorHeightTexture;
+
+				mat.needsUpdate = true;
+			});
+			gui.add(debugObject.materials, 'roughness').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.roughnessMap = null;
+				else mat.roughnessMap = doorRoughnessTexture;
+
+				mat.needsUpdate = true;
+			});
+			gui.add(debugObject.materials, 'metalness').onChange((/**@type{boolean}*/ show) => {
+				const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+				if (!show) mat.metalnessMap = null;
+				else mat.metalnessMap = doorMetalnessTexture;
+
+				mat.needsUpdate = true;
+			});
 
 			const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
@@ -226,8 +288,8 @@
 				width: 1,
 				height: 1,
 				material: shapesMaterial,
-				widthSegments: 100,
-				heightSegments: 100
+				widthSegments: 50,
+				heightSegments: 50
 			});
 
 			plane.position.x = 0;
@@ -282,7 +344,7 @@
 			}
 
 			window.requestAnimationFrame(tick);
-			document.addEventListener('resize', () => {
+			window.addEventListener('resize', () => {
 				menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
 				// @ts-ignore
@@ -293,9 +355,12 @@
 				if (isFullscreen) cameraSizes.height = window.innerHeight - menuHeight;
 				else cameraSizes.height = window.innerHeight;
 
+				camera.aspect = cameraSizes.aspect();
+				camera.updateProjectionMatrix();
+
 				renderer.setSize(cameraSizes.width, cameraSizes.height);
 			});
-			window.addEventListener('dblclick', () => {
+			document.addEventListener('dblclick', () => {
 				// @ts-ignore
 				const isFullscreen = document.fullscreenEnabled || document.webkitFullscreenEnabled;
 
