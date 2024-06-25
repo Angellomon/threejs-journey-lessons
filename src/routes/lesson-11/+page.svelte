@@ -4,6 +4,9 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { createMeshBasicTexture, newSizes } from '$lib/utils';
+	import { GUI } from 'lil-gui';
+
+	/**@typedef {"basic" | "matcap" | "normal" | "depth" | "lambert" | "phong" | "toon" | "standard"} MaterialType*/
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -70,6 +73,85 @@
 			shapesMaterial = standardMaterial;
 
 			shapesMaterial.side = THREE.DoubleSide;
+
+			const gui = new GUI();
+
+			/**@type{{
+			 * metalness: number,
+			 * roughness: number,
+			 * material: MaterialType
+			 * }}*/
+			const debugObject = {
+				metalness: 0.45,
+				roughness: 0.65,
+				material: 'basic'
+			};
+
+			/**
+			 * @param {MaterialType} materialType
+			 * @returns {THREE.Material}
+			 */
+			function getMaterial(materialType) {
+				switch (materialType) {
+					case 'basic':
+						return basicMaterial;
+					case 'depth':
+						return depthMaterial;
+					case 'lambert':
+						return lambertMaterial;
+					case 'matcap':
+						return matcapMaterial;
+					case 'normal':
+						return normalMaterial;
+					case 'phong':
+						return phongMaterial;
+					case 'standard':
+						return standardMaterial;
+					case 'toon':
+						return toonMaterial;
+					default:
+						return basicMaterial;
+				}
+			}
+
+			const materialTypes = [
+				'basic',
+				'matcap',
+				'normal',
+				'depth',
+				'lambert',
+				'phong',
+				'toon',
+				'standard'
+			];
+
+			gui
+				.add(debugObject, 'metalness')
+				.min(0)
+				.max(2)
+				.step(0.01)
+				.onChange((/**@type{number}*/ newMetalness) => {
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					mat.metalness = newMetalness;
+				});
+			gui
+				.add(debugObject, 'roughness')
+				.min(0)
+				.max(2)
+				.step(0.01)
+				.onChange((/**@type{number}*/ newRoughness) => {
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					mat.roughness = newRoughness;
+				});
+			gui
+				.add(debugObject, 'material', materialTypes)
+				.onChange((/**@type{MaterialType}*/ newMaterialType) => {
+					const newMaterial = getMaterial(newMaterialType);
+
+					sphere.material = newMaterial;
+					plane.material = newMaterial;
+					torus.material = newMaterial;
+				});
 
 			const scene = new THREE.Scene();
 

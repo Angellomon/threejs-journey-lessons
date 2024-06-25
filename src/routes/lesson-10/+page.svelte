@@ -1,6 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
-	import { createMeshBasicTexture, createMeshTextureCube, newSizes } from '$lib/utils';
+	import { createMeshBasicTexture, newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
