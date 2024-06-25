@@ -1,6 +1,7 @@
 <script>
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { createMeshBasicTexture, newSizes } from '$lib/utils';
@@ -14,7 +15,17 @@
 	if (browser) {
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
+		const scene = new THREE.Scene();
+
 		function setupScene() {
+			const rgbeLoader = new RGBELoader();
+
+			rgbeLoader.load('/textures/environmentMap/2k.hdr', (enviromentMap) => {
+				enviromentMap.mapping = THREE.EquirectangularReflectionMapping;
+				scene.background = enviromentMap;
+				scene.environment = enviromentMap;
+			});
+
 			const textureLoader = new THREE.TextureLoader();
 
 			const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
@@ -33,7 +44,8 @@
 			matcapTexture.colorSpace = THREE.SRGBColorSpace;
 
 			const basicMaterial = new THREE.MeshBasicMaterial({
-				map: doorColorTexture
+				map: doorColorTexture,
+				side: THREE.DoubleSide
 			});
 
 			const normalMaterial = new THREE.MeshNormalMaterial();
@@ -56,9 +68,14 @@
 			gradientTexture.minFilter = THREE.NearestFilter;
 			gradientTexture.generateMipmaps = false;
 
-			const standardMaterial = new THREE.MeshStandardMaterial();
+			const standardMaterial = new THREE.MeshStandardMaterial({
+				side: THREE.DoubleSide
+			});
 			standardMaterial.metalness = 0.45;
 			standardMaterial.roughness = 0.65;
+			standardMaterial.map = doorColorTexture;
+			standardMaterial.aoMap = doorAmbientOcclusionTexture;
+			standardMaterial.displacementMap = doorHeightTexture;
 
 			/**@type{THREE.Material}*/
 			let shapesMaterial;
@@ -79,12 +96,16 @@
 			/**@type{{
 			 * metalness: number,
 			 * roughness: number,
-			 * material: MaterialType
+			 * material: MaterialType,
+			 * aoMapIntensity: number,
+			 * displacementScale: number
 			 * }}*/
 			const debugObject = {
 				metalness: 0.45,
 				roughness: 0.65,
-				material: 'basic'
+				material: 'standard',
+				aoMapIntensity: 1,
+				displacementScale: 0.1
 			};
 
 			/**
@@ -128,7 +149,7 @@
 			gui
 				.add(debugObject, 'metalness')
 				.min(0)
-				.max(2)
+				.max(1)
 				.step(0.01)
 				.onChange((/**@type{number}*/ newMetalness) => {
 					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
@@ -137,11 +158,29 @@
 			gui
 				.add(debugObject, 'roughness')
 				.min(0)
-				.max(2)
+				.max(1)
 				.step(0.01)
 				.onChange((/**@type{number}*/ newRoughness) => {
 					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
 					mat.roughness = newRoughness;
+				});
+			gui
+				.add(debugObject, 'aoMapIntensity')
+				.min(0)
+				.max(3)
+				.step(0.01)
+				.onChange((/**@type{number}*/ newAOMapIntensity) => {
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					mat.aoMapIntensity = newAOMapIntensity;
+				});
+			gui
+				.add(debugObject, 'displacementScale')
+				.min(0)
+				.max(1)
+				.step(0.01)
+				.onChange((/**@type{number}*/ newDisplacementScale) => {
+					const mat = /**@type {THREE.MeshStandardMaterial}*/ (getMaterial('standard'));
+					mat.displacementScale = newDisplacementScale;
 				});
 			gui
 				.add(debugObject, 'material', materialTypes)
@@ -153,7 +192,7 @@
 					torus.material = newMaterial;
 				});
 
-			const scene = new THREE.Scene();
+			gui.add;
 
 			const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
@@ -173,8 +212,8 @@
 			const sphere = createMeshBasicTexture({
 				shape: 'sphere',
 				length: 0.5,
-				widthSegments: 16,
-				heightSegments: 16,
+				widthSegments: 64,
+				heightSegments: 64,
 				material: shapesMaterial
 			});
 
@@ -186,7 +225,9 @@
 				shape: 'plane',
 				width: 1,
 				height: 1,
-				material: shapesMaterial
+				material: shapesMaterial,
+				widthSegments: 100,
+				heightSegments: 100
 			});
 
 			plane.position.x = 0;
@@ -197,8 +238,8 @@
 				shape: 'torus',
 				radius: 0.3,
 				tube: 0.2,
-				radialSegments: 16,
-				tubularSegments: 32,
+				radialSegments: 64,
+				tubularSegments: 128,
 				arc: 7,
 				material: shapesMaterial
 			});
