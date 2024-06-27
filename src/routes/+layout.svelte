@@ -34,6 +34,9 @@
 
 				<a href="/lesson-11"><Menubar.Item>11 - Materials</Menubar.Item></a>
 				<Menubar.Separator />
+
+				<a href="/lesson-12"><Menubar.Item>12 - 3D Text</Menubar.Item></a>
+				<Menubar.Separator />
 			</Menubar.Content>
 		</Menubar.Menu>
 	</Menubar.Root>
