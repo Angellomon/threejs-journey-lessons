@@ -19,18 +19,18 @@
 		function setupScene() {
 			const scene = new THREE.Scene();
 
-			const axesHelper = new THREE.AxesHelper();
-			scene.add(axesHelper);
+			// const axesHelper = new THREE.AxesHelper();
+			// scene.add(axesHelper);
 
 			const textureLoader = new THREE.TextureLoader();
 
-			const texture = textureLoader.load('/textures/matcaps/4.png');
-			texture.colorSpace = THREE.SRGBColorSpace;
+			const textTexture = textureLoader.load('/textures/matcaps/3.png');
+			const geometriesTexture = textureLoader.load('/textures/matcaps/4.png');
+			geometriesTexture.colorSpace = THREE.SRGBColorSpace;
+			textTexture.colorSpace = THREE.SRGBColorSpace;
 
 			const fontLoader = new FontLoader();
 			fontLoader.load('/fonts/mulish.typeface.json', (font) => {
-				console.log('font loaded');
-
 				const textMesh = new THREE.Mesh(
 					new TextGeometry('hmmm', {
 						font,
@@ -44,7 +44,7 @@
 						bevelSegments: 8
 					}),
 					new THREE.MeshMatcapMaterial({
-						matcap: texture
+						matcap: textTexture
 						// wireframe: true
 					})
 				);
@@ -67,8 +67,6 @@
 				// 	);
 				textMesh.geometry.center();
 
-				console.log(textMesh.geometry.boundingBox);
-
 				scene.add(textMesh);
 			});
 
@@ -76,7 +74,7 @@
 			const cubeGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
 
 			const geometriesMaterial = new THREE.MeshMatcapMaterial({
-				matcap: texture
+				matcap: geometriesTexture
 			});
 
 			for (let i = 0; i < GEOMETRIES_NUMBER; i++) {
@@ -131,6 +129,11 @@
 			const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect(), 0.02);
 			camera.position.z = 5;
 
+			gsap.from(camera.rotation, {
+				x: -1 * Math.PI * 0.25,
+				duration: 1
+			});
+
 			const controls = new OrbitControls(camera, canvas);
 
 			const renderer = new THREE.WebGLRenderer({
@@ -163,7 +166,6 @@
 			canvas.addEventListener('dblclick', () => {
 				const isFullscreen = !!document.fullscreenElement;
 
-				console.log('dblclick', isFullscreen);
 				if (isFullscreen) {
 					document.exitFullscreen();
 				} else {
