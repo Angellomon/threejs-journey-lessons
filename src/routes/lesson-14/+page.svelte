@@ -5,6 +5,7 @@
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 	import { GUI } from 'lil-gui';
+	import gsap from 'gsap';
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -142,8 +143,24 @@
 			const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material);
 			sphere.position.x = -1;
 
+			gsap.to(sphere.rotation, {
+				x: Math.PI * 2,
+				y: Math.PI * 2,
+				ease: 'none',
+				repeat: -1,
+				duration: 10
+			});
+
 			const cube = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), material);
 			cube.position.x = 0;
+
+			gsap.to(cube.rotation, {
+				x: Math.PI * 2,
+				y: Math.PI * 2,
+				ease: 'none',
+				repeat: -1,
+				duration: 10
+			});
 
 			const torus = new THREE.Mesh(
 				new THREE.TorusGeometry(0.3, 0.15, 12, 48, Math.PI * 2),
@@ -151,6 +168,14 @@
 			);
 
 			torus.position.x = 1;
+
+			gsap.to(torus.rotation, {
+				x: Math.PI * 2,
+				y: Math.PI * 2,
+				ease: 'none',
+				repeat: -1,
+				duration: 10
+			});
 
 			shapesGroup.add(sphere, cube, torus);
 
