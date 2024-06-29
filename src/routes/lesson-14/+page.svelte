@@ -126,8 +126,23 @@
 				rectAreaLight.intensity = 1;
 			}
 
+			function lookAtSphere() {
+				rectAreaLight.lookAt(sphere.position);
+			}
+
+			function lookAtCube() {
+				rectAreaLight.lookAt(cube.position);
+			}
+
+			function lookAtTorus() {
+				rectAreaLight.lookAt(torus.position);
+			}
+
 			rectAreaGUI.add({ turnOnRectArea }, 'turnOnRectArea');
 			rectAreaGUI.add({ turnOffRectArea }, 'turnOffRectArea');
+			rectAreaGUI.add({ lookAtSphere }, 'lookAtSphere');
+			rectAreaGUI.add({ lookAtCube }, 'lookAtCube');
+			rectAreaGUI.add({ lookAtTorus }, 'lookAtTorus');
 
 			scene.add(ambientLight, pointLight, directionalLight, hemisphereLight, rectAreaLight);
 
