@@ -20,6 +20,7 @@
 			const directionalGUI = gui.addFolder('directional light');
 			const hemisphereGUI = gui.addFolder('hemisphere light');
 			const rectAreaGUI = gui.addFolder('rect area light');
+			const spotLightGUI = gui.addFolder('spot light');
 
 			const scene = new THREE.Scene();
 
@@ -144,7 +145,57 @@
 			rectAreaGUI.add({ lookAtCube }, 'lookAtCube');
 			rectAreaGUI.add({ lookAtTorus }, 'lookAtTorus');
 
-			scene.add(ambientLight, pointLight, directionalLight, hemisphereLight, rectAreaLight);
+			const spotLight = new THREE.SpotLight(0x00ff00, 0, 10, Math.PI * 0.1, 0.25, 1);
+
+			spotLightGUI.add(spotLight, 'intensity').min(0).max(2).step(0.01);
+			spotLightGUI.addColor(spotLight, 'color');
+			spotLightGUI.add(spotLight, 'distance').min(0).max(10).step(0.01);
+			spotLightGUI
+				.add(spotLight, 'angle')
+				.min(-Math.PI * 2)
+				.max(Math.PI * 2)
+				.step(Math.PI * 0.01);
+			spotLightGUI.add(spotLight, 'penumbra').min(0).max(1).step(0.01);
+			spotLightGUI.add(spotLight, 'decay').min(0).max(1).step(0.01);
+
+			spotLightGUI.add(spotLight.position, 'x').min(-5).max(5).step(0.01);
+			spotLightGUI.add(spotLight.position, 'y').min(-5).max(5).step(0.01);
+			spotLightGUI.add(spotLight.position, 'z').min(-5).max(5).step(0.01);
+
+			function turnOffSpotLight() {
+				spotLight.intensity = 0;
+			}
+
+			function turnOnSpotLight() {
+				spotLight.intensity = 1;
+			}
+
+			function lookAtSphere() {
+				spotLight.lookAt(sphere.position);
+			}
+
+			function lookAtCube() {
+				spotLight.lookAt(cube.position);
+			}
+
+			function lookAtTorus() {
+				spotLight.lookAt(torus.position);
+			}
+
+			spotLightGUI.add({ turnOnSpotLight }, 'turnOnSpotLight');
+			spotLightGUI.add({ turnOffSpotLight }, 'turnOffSpotLight');
+			spotLightGUI.add({ lookAtSphere }, 'lookAtSphere');
+			spotLightGUI.add({ lookAtCube }, 'lookAtCube');
+			spotLightGUI.add({ lookAtTorus }, 'lookAtTorus');
+
+			scene.add(
+				ambientLight,
+				pointLight,
+				directionalLight,
+				hemisphereLight,
+				rectAreaLight,
+				spotLight
+			);
 
 			const shapesGroup = new THREE.Group();
 			const floorGroup = new THREE.Group();
