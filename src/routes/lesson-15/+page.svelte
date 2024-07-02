@@ -1,9 +1,10 @@
 <script>
 	import { browser } from '$app/environment';
-	import { createMeshBasicCube, newSizes } from '$lib/utils';
+	import { newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	import { GUI } from 'lil-gui';
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -12,21 +13,55 @@
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
 		function setupScene() {
+			const debugUI = new GUI();
+			const ambientLightDebugUI = debugUI.addFolder('Ambient Light');
+			const directionalLightDebugUI = debugUI.addFolder('Directional Light');
+
 			const scene = new THREE.Scene();
 
-			const cube = createMeshBasicCube();
-			scene.add(cube);
+			const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+			scene.add(ambientLight);
+			ambientLightDebugUI.add(ambientLight, 'intensity').min(0).max(2).step(0.01);
+
+			const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+			scene.add(directionalLight);
+			directionalLight.castShadow = true;
+
+			directionalLight.position.x = 2;
+			directionalLight.position.y = 5;
+
+			directionalLightDebugUI.add(directionalLight, 'intensity').min(0).max(2).step(0.01);
+			directionalLightDebugUI.add(directionalLight.position, 'x').min(-5).max(5).step(0.001);
+			directionalLightDebugUI.add(directionalLight.position, 'y').min(-5).max(5).step(0.001);
+			directionalLightDebugUI.add(directionalLight.position, 'z').min(-5).max(5).step(0.001);
+
+			const material = new THREE.MeshStandardMaterial();
+
+			const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 16), material);
+			scene.add(sphere);
+
+			sphere.position.y = 0.5;
+			sphere.castShadow = true;
+
+			const plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), material);
+			scene.add(plane);
+
+			plane.rotation.x = Math.PI * -0.5;
+			plane.receiveShadow = true;
 
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
 
 			const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
 			camera.position.z = 5;
+			camera.position.y = 1;
+			camera.lookAt(new THREE.Vector3());
 
 			const controls = new OrbitControls(camera, canvas);
 
 			const renderer = new THREE.WebGLRenderer({
 				canvas
 			});
+			renderer.shadowMap.enabled = true;
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
 
 			function tick() {
