@@ -41,6 +41,8 @@
 			ambientGUI.add({ turnOffAmbient }, 'turnOffAmbient');
 
 			const pointLight = new THREE.PointLight(0xffffff, 0);
+			const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.25);
+			scene.add(pointLightHelper);
 			// pointLight.position.x = 2;
 			// pointLight.position.y = 3;
 			// pointLight.position.z = 4;
@@ -65,6 +67,8 @@
 			pointGUI.add({ turnOffPoint }, 'turnOffPoint');
 
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 0);
+			const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.25);
+			scene.add(directionalLightHelper);
 
 			directionalGUI.add(directionalLight, 'intensity').min(0).max(2).step(0.01);
 
@@ -86,6 +90,8 @@
 			directionalGUI.add({ turnOffDirectional }, 'turnOffDirectional');
 
 			const hemisphereLight = new THREE.HemisphereLight(0x0000ff, 0xff0000, 0);
+			const hemisphereLightHelper = new THREE.HemisphereLightHelper(hemisphereLight, 0.25);
+			scene.add(hemisphereLightHelper);
 
 			hemisphereGUI.add(hemisphereLight, 'intensity').min(0).max(2).step(0.01);
 
@@ -146,6 +152,8 @@
 			rectAreaGUI.add({ lookAtTorus }, 'lookAtTorus');
 
 			const spotLight = new THREE.SpotLight(0x00ff00, 0, 10, Math.PI * 0.1, 0.25, 1);
+			const spotLightHelper = new THREE.SpotLightHelper(spotLight, 0.25);
+			scene.add(spotLightHelper);
 
 			spotLightGUI.add(spotLight, 'intensity').min(0).max(2).step(0.01);
 			spotLightGUI.addColor(spotLight, 'color');
