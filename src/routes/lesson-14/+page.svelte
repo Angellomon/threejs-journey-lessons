@@ -25,6 +25,7 @@
 			const scene = new THREE.Scene();
 
 			const ambientLight = new THREE.AmbientLight(0xffffff, 0);
+			scene.add(ambientLight);
 
 			ambientGUI.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 			ambientGUI.addColor(ambientLight, 'color');
@@ -42,7 +43,7 @@
 
 			const pointLight = new THREE.PointLight(0xffffff, 0);
 			const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.25);
-			scene.add(pointLightHelper);
+			scene.add(pointLight, pointLightHelper);
 			// pointLight.position.x = 2;
 			// pointLight.position.y = 3;
 			// pointLight.position.z = 4;
@@ -68,7 +69,7 @@
 
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 0);
 			const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.25);
-			scene.add(directionalLightHelper);
+			scene.add(directionalLight, directionalLightHelper);
 
 			directionalGUI.add(directionalLight, 'intensity').min(0).max(2).step(0.01);
 
@@ -91,7 +92,7 @@
 
 			const hemisphereLight = new THREE.HemisphereLight(0x0000ff, 0xff0000, 0);
 			const hemisphereLightHelper = new THREE.HemisphereLightHelper(hemisphereLight, 0.25);
-			scene.add(hemisphereLightHelper);
+			scene.add(hemisphereLight, hemisphereLightHelper);
 
 			hemisphereGUI.add(hemisphereLight, 'intensity').min(0).max(2).step(0.01);
 
@@ -114,6 +115,7 @@
 			hemisphereGUI.add({ turnOffHemisphere }, 'turnOffHemisphere');
 
 			const rectAreaLight = new THREE.RectAreaLight(0xffffff, 0, 1, 1);
+			scene.add(rectAreaLight);
 
 			rectAreaGUI.add(rectAreaLight, 'intensity').min(0).max(2).step(0.01);
 			rectAreaGUI.add(rectAreaLight, 'width').min(0).max(2).step(0.01);
@@ -153,7 +155,7 @@
 
 			const spotLight = new THREE.SpotLight(0x00ff00, 0, 10, Math.PI * 0.1, 0.25, 1);
 			const spotLightHelper = new THREE.SpotLightHelper(spotLight, 0.25);
-			scene.add(spotLightHelper);
+			scene.add(spotLight, spotLightHelper);
 
 			spotLightGUI.add(spotLight, 'intensity').min(0).max(2).step(0.01);
 			spotLightGUI.addColor(spotLight, 'color');
@@ -195,15 +197,6 @@
 			spotLightGUI.add({ lookAtSphere }, 'lookAtSphere');
 			spotLightGUI.add({ lookAtCube }, 'lookAtCube');
 			spotLightGUI.add({ lookAtTorus }, 'lookAtTorus');
-
-			scene.add(
-				ambientLight,
-				pointLight,
-				directionalLight,
-				hemisphereLight,
-				rectAreaLight,
-				spotLight
-			);
 
 			const shapesGroup = new THREE.Group();
 			const floorGroup = new THREE.Group();
