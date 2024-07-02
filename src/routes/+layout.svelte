@@ -40,6 +40,9 @@
 
 				<a href="/lesson-14"><Menubar.Item>14 - Lights</Menubar.Item></a>
 				<Menubar.Separator />
+
+				<a href="/lesson-15"><Menubar.Item>15 - Shadows</Menubar.Item></a>
+				<Menubar.Separator />
 			</Menubar.Content>
 		</Menubar.Menu>
 	</Menubar.Root>
