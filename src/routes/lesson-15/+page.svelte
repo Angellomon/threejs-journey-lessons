@@ -25,15 +25,48 @@
 
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 			scene.add(directionalLight);
+
+			const directionalLightShadowCameraDebugUI =
+				directionalLightDebugUI.addFolder('Shadow Camera');
+			const directionalLightShadowDebugUI = directionalLightDebugUI.addFolder('Shadow');
+			const directionalLightMapSizeDebugUI = directionalLightDebugUI.addFolder('Shadow Map Size');
+
 			directionalLight.castShadow = true;
+			directionalLight.shadow.camera.top = 2;
+
+			directionalLightShadowDebugUI.add(directionalLight.shadow, 'radius');
+
+			directionalLightMapSizeDebugUI.add(directionalLight.shadow.mapSize, 'width');
+			directionalLightMapSizeDebugUI.add(directionalLight.shadow.mapSize, 'height');
+
+			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'top');
+			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'bottom');
+			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'left');
+			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'right');
+			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'near');
+			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'far');
 
 			directionalLight.position.x = 2;
 			directionalLight.position.y = 5;
 
+			const directionalLightPositionDebugUI = directionalLightDebugUI.addFolder('Position');
+
 			directionalLightDebugUI.add(directionalLight, 'intensity').min(0).max(2).step(0.01);
-			directionalLightDebugUI.add(directionalLight.position, 'x').min(-5).max(5).step(0.001);
-			directionalLightDebugUI.add(directionalLight.position, 'y').min(-5).max(5).step(0.001);
-			directionalLightDebugUI.add(directionalLight.position, 'z').min(-5).max(5).step(0.001);
+			directionalLightPositionDebugUI
+				.add(directionalLight.position, 'x')
+				.min(-5)
+				.max(5)
+				.step(0.001);
+			directionalLightPositionDebugUI
+				.add(directionalLight.position, 'y')
+				.min(-5)
+				.max(5)
+				.step(0.001);
+			directionalLightPositionDebugUI
+				.add(directionalLight.position, 'z')
+				.min(-5)
+				.max(5)
+				.step(0.001);
 
 			const material = new THREE.MeshStandardMaterial();
 
@@ -62,7 +95,10 @@
 				canvas
 			});
 			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 			function tick() {
 				renderer.render(scene, camera);
