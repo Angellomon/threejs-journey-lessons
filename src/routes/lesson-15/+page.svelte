@@ -90,7 +90,7 @@
 					directionalLightHelper.update();
 				});
 
-			const spotlight = new THREE.SpotLight(0xffffff, 0.4, 10, Math.PI * 0.3);
+			const spotlight = new THREE.SpotLight(0xffffff, 1, 10, Math.PI * 0.3);
 			const spotlightHelper = new THREE.SpotLightHelper(spotlight);
 			scene.add(spotlight, spotlightHelper);
 
@@ -120,6 +120,17 @@
 				.max(5)
 				.onChange(() => {
 					spotlightHelper.update();
+				});
+
+			const spotlightShadowFolder = spotlightDebugUI.addFolder('Shadow');
+
+			spotlightShadowFolder.add(spotlight, 'castShadow');
+			spotlightShadowFolder
+				.add(spotlight.shadow.camera, 'fov')
+				.min(0)
+				.max(120)
+				.onChange(() => {
+					spotlight.shadow.needsUpdate = true;
 				});
 
 			const spotlightHelperFolder = spotlightDebugUI.addFolder('Helper');
