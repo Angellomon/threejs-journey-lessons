@@ -69,21 +69,61 @@
 				.add(directionalLight.position, 'x')
 				.min(-5)
 				.max(5)
-				.step(0.001);
+				.step(0.001)
+				.onChange(() => {
+					directionalLightHelper.update();
+				});
 			directionalLightPositionDebugUI
 				.add(directionalLight.position, 'y')
 				.min(-5)
 				.max(5)
-				.step(0.001);
+				.step(0.001)
+				.onChange(() => {
+					directionalLightHelper.update();
+				});
 			directionalLightPositionDebugUI
 				.add(directionalLight.position, 'z')
 				.min(-5)
 				.max(5)
-				.step(0.001);
+				.step(0.001)
+				.onChange(() => {
+					directionalLightHelper.update();
+				});
 
 			const spotlight = new THREE.SpotLight(0xffffff, 0.4, 10, Math.PI * 0.3);
 			const spotlightHelper = new THREE.SpotLightHelper(spotlight);
 			scene.add(spotlight, spotlightHelper);
+
+			spotlight.castShadow = true;
+
+			spotlightDebugUI.add(spotlight, 'intensity');
+			spotlightDebugUI.add(spotlight, 'distance');
+
+			const spotlightPositionFolder = spotlightDebugUI.addFolder('Position');
+			spotlightPositionFolder
+				.add(spotlight.position, 'x')
+				.min(-5)
+				.max(5)
+				.onChange(() => {
+					spotlightHelper.update();
+				});
+			spotlightPositionFolder
+				.add(spotlight.position, 'y')
+				.min(-5)
+				.max(5)
+				.onChange(() => {
+					spotlightHelper.update();
+				});
+			spotlightPositionFolder
+				.add(spotlight.position, 'z')
+				.min(-5)
+				.max(5)
+				.onChange(() => {
+					spotlightHelper.update();
+				});
+
+			const spotlightHelperFolder = spotlightDebugUI.addFolder('Helper');
+			spotlightHelperFolder.add(spotlightHelper, 'visible');
 
 			const material = new THREE.MeshStandardMaterial();
 
