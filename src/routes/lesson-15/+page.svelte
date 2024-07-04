@@ -38,10 +38,18 @@
 			directionalLight.castShadow = true;
 			directionalLight.shadow.camera.top = 2;
 
-			directionalLightShadowDebugUI.add(directionalLight.shadow, 'radius');
+			directionalLightShadowDebugUI.add(directionalLight.shadow, 'radius').min(0).max(10);
 
-			directionalLightMapSizeDebugUI.add(directionalLight.shadow.mapSize, 'width');
-			directionalLightMapSizeDebugUI.add(directionalLight.shadow.mapSize, 'height');
+			directionalLightMapSizeDebugUI
+				.add(directionalLight.shadow.mapSize, 'width')
+				.min(0)
+				.max(2048)
+				.step(32);
+			directionalLightMapSizeDebugUI
+				.add(directionalLight.shadow.mapSize, 'height')
+				.min(0)
+				.max(2048)
+				.step(32);
 
 			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'top');
 			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'bottom');
