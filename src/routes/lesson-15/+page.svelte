@@ -16,6 +16,7 @@
 			const debugUI = new GUI();
 			const ambientLightDebugUI = debugUI.addFolder('Ambient Light');
 			const directionalLightDebugUI = debugUI.addFolder('Directional Light');
+			const spotlightDebugUI = debugUI.addFolder('Spotlight Light');
 
 			const scene = new THREE.Scene();
 
@@ -24,7 +25,10 @@
 			ambientLightDebugUI.add(ambientLight, 'intensity').min(0).max(2).step(0.01);
 
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-			scene.add(directionalLight);
+			const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+			scene.add(directionalLight, directionalLightHelper);
+
+			const directionalLightHelperDebugUI = directionalLightDebugUI.addFolder('Helper');
 
 			const directionalLightShadowCameraDebugUI =
 				directionalLightDebugUI.addFolder('Shadow Camera');
@@ -46,8 +50,9 @@
 			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'near');
 			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'far');
 
-			directionalLight.position.x = 2;
-			directionalLight.position.y = 5;
+			directionalLightHelperDebugUI.add(directionalLightHelper, 'visible');
+
+			directionalLight.position.y = 2;
 
 			const directionalLightPositionDebugUI = directionalLightDebugUI.addFolder('Position');
 
@@ -68,7 +73,16 @@
 				.max(5)
 				.step(0.001);
 
+			const spotlight = new THREE.SpotLight(0xffffff, 0.4, 10, Math.PI * 0.3);
+			const spotlightHelper = new THREE.SpotLightHelper(spotlight);
+			scene.add(spotlight, spotlightHelper);
+
 			const material = new THREE.MeshStandardMaterial();
+
+			const materialDebugUI = directionalLightDebugUI.addFolder('Standard Material');
+
+			materialDebugUI.add(material, 'roughness').min(0).max(1).step(0.001);
+			materialDebugUI.add(material, 'metalness').min(0).max(1).step(0.001);
 
 			const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 16), material);
 			scene.add(sphere);
