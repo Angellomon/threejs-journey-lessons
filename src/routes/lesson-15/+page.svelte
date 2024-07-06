@@ -136,6 +136,15 @@
 			const spotlightHelperFolder = spotlightDebugUI.addFolder('Helper');
 			spotlightHelperFolder.add(spotlightHelper, 'visible');
 
+			const pointLight = new THREE.PointLight(0xffffff, 2);
+			const pointLightHelper = new THREE.PointLightHelper(pointLight);
+
+			scene.add(pointLight, pointLightHelper);
+
+			pointLight.castShadow = true;
+
+			pointLight.position.set(-1, 1, 0);
+
 			const material = new THREE.MeshStandardMaterial();
 
 			const materialDebugUI = directionalLightDebugUI.addFolder('Standard Material');
