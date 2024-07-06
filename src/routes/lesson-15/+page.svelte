@@ -32,127 +32,49 @@
 			ambientLightDebugUI.add(ambientLight, 'intensity').min(0).max(2).step(0.01);
 
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
-			const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
-			scene.add(directionalLight, directionalLightHelper);
-
-			const directionalLightHelperDebugUI = directionalLightDebugUI.addFolder('Helper');
-
-			const directionalLightShadowCameraDebugUI =
-				directionalLightDebugUI.addFolder('Shadow Camera');
-			const directionalLightShadowDebugUI = directionalLightDebugUI.addFolder('Shadow');
-			const directionalLightMapSizeDebugUI = directionalLightDebugUI.addFolder('Shadow Map Size');
+			const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+			scene.add(directionalLight, directionalLightCameraHelper);
 
 			directionalLight.castShadow = true;
+			directionalLight.shadow.mapSize.width = 1024;
+			directionalLight.shadow.mapSize.height = 1024;
+			directionalLight.shadow.camera.near = 1;
+			directionalLight.shadow.camera.far = 6;
 			directionalLight.shadow.camera.top = 2;
-
-			directionalLightShadowDebugUI.add(directionalLight.shadow, 'radius').min(0).max(10);
-
-			directionalLightMapSizeDebugUI
-				.add(directionalLight.shadow.mapSize, 'width')
-				.min(0)
-				.max(2048)
-				.step(32);
-			directionalLightMapSizeDebugUI
-				.add(directionalLight.shadow.mapSize, 'height')
-				.min(0)
-				.max(2048)
-				.step(32);
-
-			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'top');
-			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'bottom');
-			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'left');
-			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'right');
-			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'near');
-			directionalLightShadowCameraDebugUI.add(directionalLight.shadow.camera, 'far');
-
-			directionalLightHelperDebugUI.add(directionalLightHelper, 'visible');
+			directionalLight.shadow.camera.right = 2;
+			directionalLight.shadow.camera.bottom = -2;
+			directionalLight.shadow.camera.left = -2;
+			directionalLight.shadow.radius = 10;
+			directionalLight.position.set(2, 2, -1);
 
 			directionalLight.position.y = 2;
 
-			const directionalLightPositionDebugUI = directionalLightDebugUI.addFolder('Position');
-
 			directionalLightDebugUI.add(directionalLight, 'intensity').min(0).max(2).step(0.01);
-			directionalLightPositionDebugUI
-				.add(directionalLight.position, 'x')
-				.min(-5)
-				.max(5)
-				.step(0.001)
-				.onChange(() => {
-					directionalLightHelper.update();
-				});
-			directionalLightPositionDebugUI
-				.add(directionalLight.position, 'y')
-				.min(-5)
-				.max(5)
-				.step(0.001)
-				.onChange(() => {
-					directionalLightHelper.update();
-				});
-			directionalLightPositionDebugUI
-				.add(directionalLight.position, 'z')
-				.min(-5)
-				.max(5)
-				.step(0.001)
-				.onChange(() => {
-					directionalLightHelper.update();
-				});
 
 			const spotlight = new THREE.SpotLight(0xffffff, 1, 2, Math.PI * 0.2);
-			const spotlightHelper = new THREE.SpotLightHelper(spotlight);
-			scene.add(spotlight, spotlightHelper);
-
-			spotlight.position.y = 2;
+			const spotlightCameraHelper = new THREE.CameraHelper(spotlight.shadow.camera);
+			scene.add(spotlight, spotlightCameraHelper, spotlight.target);
 
 			spotlight.castShadow = true;
+			spotlight.shadow.mapSize.width = 1024;
+			spotlight.shadow.mapSize.height = 1024;
+			spotlight.shadow.camera.near = 1;
+			spotlight.shadow.camera.far = 6;
+			spotlight.position.set(0, 2, 2);
 
 			spotlightDebugUI.add(spotlight, 'intensity');
-			spotlightDebugUI.add(spotlight, 'distance');
-
-			const spotlightPositionFolder = spotlightDebugUI.addFolder('Position');
-			spotlightPositionFolder
-				.add(spotlight.position, 'x')
-				.min(-5)
-				.max(5)
-				.onChange(() => {
-					spotlightHelper.update();
-				});
-			spotlightPositionFolder
-				.add(spotlight.position, 'y')
-				.min(-5)
-				.max(5)
-				.onChange(() => {
-					spotlightHelper.update();
-				});
-			spotlightPositionFolder
-				.add(spotlight.position, 'z')
-				.min(-5)
-				.max(5)
-				.onChange(() => {
-					spotlightHelper.update();
-				});
-
-			const spotlightShadowFolder = spotlightDebugUI.addFolder('Shadow');
-
-			spotlightShadowFolder.add(spotlight, 'castShadow');
-			spotlightShadowFolder
-				.add(spotlight.shadow.camera, 'fov')
-				.min(0)
-				.max(120)
-				.onChange(() => {
-					spotlight.shadow.needsUpdate = true;
-				});
-
-			const spotlightHelperFolder = spotlightDebugUI.addFolder('Helper');
-			spotlightHelperFolder.add(spotlightHelper, 'visible');
 
 			const pointLight = new THREE.PointLight(0xffffff, 2);
-			const pointLightHelper = new THREE.PointLightHelper(pointLight);
-
-			scene.add(pointLight, pointLightHelper);
+			const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
 
 			pointLight.castShadow = true;
+			pointLight.shadow.mapSize.width = 1024;
+			pointLight.shadow.mapSize.height = 1024;
+			pointLight.shadow.camera.near = 0.1;
+			pointLight.shadow.camera.far = 5;
+			pointLight.position.set(-1, 1, 0);
 
-			pointLight.position.set(1, 1, 1);
+			scene.add(pointLight, pointLightCameraHelper);
 
 			const material = new THREE.MeshStandardMaterial();
 
@@ -168,8 +90,10 @@
 
 			const plane = new THREE.Mesh(
 				new THREE.PlaneGeometry(5, 5),
-				new THREE.MeshBasicMaterial({ map: bakedShadowTexture })
+				new THREE.MeshStandardMaterial()
+				// new THREE.MeshBasicMaterial({ map: bakedShadowTexture }),
 			);
+			plane.rotation.x = -Math.PI * 0.5;
 			plane.position.y = -0.5;
 			scene.add(plane);
 
@@ -194,8 +118,9 @@
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
 
 			const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
-			camera.position.z = 5;
+			camera.position.x = 1;
 			camera.position.y = 1;
+			camera.position.z = 2;
 			camera.lookAt(new THREE.Vector3());
 
 			const controls = new OrbitControls(camera, canvas);
@@ -203,7 +128,7 @@
 			const renderer = new THREE.WebGLRenderer({
 				canvas
 			});
-			renderer.shadowMap.enabled = false;
+			renderer.shadowMap.enabled = true;
 			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
