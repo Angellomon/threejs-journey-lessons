@@ -19,8 +19,11 @@
 			const spotlightDebugUI = debugUI.addFolder('Spotlight Light');
 
 			const textureLoader = new THREE.TextureLoader();
-			const shadowTexture = textureLoader.load('/textures/bakedShadow.jpg');
-			shadowTexture.colorSpace = THREE.SRGBColorSpace;
+			const bakedShadowTexture = textureLoader.load('/textures/bakedShadow.jpg');
+			bakedShadowTexture.colorSpace = THREE.SRGBColorSpace;
+
+			const simpleShadowTexture = textureLoader.load('/textures/simpleShadow.jpg');
+			simpleShadowTexture.colorSpace = THREE.SRGBColorSpace;
 
 			const scene = new THREE.Scene();
 
@@ -165,13 +168,28 @@
 
 			const plane = new THREE.Mesh(
 				new THREE.PlaneGeometry(5, 5),
-				new THREE.MeshBasicMaterial({ map: shadowTexture })
+				new THREE.MeshBasicMaterial({ map: bakedShadowTexture })
 			);
 			plane.position.y = -0.5;
 			scene.add(plane);
 
 			plane.rotation.x = Math.PI * -0.5;
 			plane.receiveShadow = true;
+
+			const sphereShadow = new THREE.Mesh(
+				new THREE.PlaneGeometry(1.5, 1.5),
+				new THREE.MeshBasicMaterial({
+					color: 0x000000,
+					transparent: true,
+					alphaMap: simpleShadowTexture
+				})
+			);
+			sphereShadow.rotation.x = Math.PI * -0.5;
+			sphereShadow.position.y = -0.5 + 0.001;
+			sphereShadow.position.x = sphere.position.x;
+			sphereShadow.position.z = sphere.position.z;
+
+			scene.add(sphereShadow);
 
 			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
 
