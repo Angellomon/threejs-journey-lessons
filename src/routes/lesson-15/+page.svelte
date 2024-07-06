@@ -100,8 +100,8 @@
 
 			const plane = new THREE.Mesh(
 				new THREE.PlaneGeometry(5, 5),
-				// new THREE.MeshStandardMaterial()
-				new THREE.MeshBasicMaterial({ map: bakedShadowTexture })
+				new THREE.MeshStandardMaterial()
+				// new THREE.MeshBasicMaterial({ map: bakedShadowTexture })
 			);
 			plane.rotation.x = -Math.PI * 0.5;
 			plane.rotation.z = Math.PI * 1.25;
@@ -145,7 +145,18 @@
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
 			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+			const clock = new THREE.Clock();
+
 			function tick() {
+				const elapsedTime = clock.getElapsedTime();
+
+				sphere.position.x = Math.sin(elapsedTime);
+				sphere.position.y = Math.sin(elapsedTime) + 1;
+				sphere.position.z = Math.cos(elapsedTime);
+
+				sphereShadow.position.x = sphere.position.x;
+				sphereShadow.position.z = sphere.position.z;
+
 				renderer.render(scene, camera);
 
 				controls.update();
