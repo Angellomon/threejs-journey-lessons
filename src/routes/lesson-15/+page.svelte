@@ -150,12 +150,13 @@
 			function tick() {
 				const elapsedTime = clock.getElapsedTime();
 
-				sphere.position.x = Math.sin(elapsedTime);
-				sphere.position.y = Math.sin(elapsedTime) + 1;
-				sphere.position.z = Math.cos(elapsedTime);
+				sphere.position.x = Math.sin(elapsedTime) * 1.5;
+				sphere.position.y = Math.abs(Math.sin(elapsedTime * 3));
+				sphere.position.z = Math.cos(elapsedTime) * 1.5;
 
 				sphereShadow.position.x = sphere.position.x;
 				sphereShadow.position.z = sphere.position.z;
+				sphereShadow.material.opacity = sphere.position.y;
 
 				renderer.render(scene, camera);
 
