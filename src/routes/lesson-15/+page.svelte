@@ -18,13 +18,17 @@
 			const directionalLightDebugUI = debugUI.addFolder('Directional Light');
 			const spotlightDebugUI = debugUI.addFolder('Spotlight Light');
 
+			const textureLoader = new THREE.TextureLoader();
+			const shadowTexture = textureLoader.load('/textures/bakedShadow.jpg');
+			shadowTexture.colorSpace = THREE.SRGBColorSpace;
+
 			const scene = new THREE.Scene();
 
 			const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 			scene.add(ambientLight);
 			ambientLightDebugUI.add(ambientLight, 'intensity').min(0).max(2).step(0.01);
 
-			const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+			const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
 			const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
 			scene.add(directionalLight, directionalLightHelper);
 
@@ -90,9 +94,11 @@
 					directionalLightHelper.update();
 				});
 
-			const spotlight = new THREE.SpotLight(0xffffff, 1, 10, Math.PI * 0.3);
+			const spotlight = new THREE.SpotLight(0xffffff, 1, 2, Math.PI * 0.2);
 			const spotlightHelper = new THREE.SpotLightHelper(spotlight);
 			scene.add(spotlight, spotlightHelper);
+
+			spotlight.position.y = 2;
 
 			spotlight.castShadow = true;
 
@@ -143,7 +149,7 @@
 
 			pointLight.castShadow = true;
 
-			pointLight.position.set(-1, 1, 0);
+			pointLight.position.set(1, 1, 1);
 
 			const material = new THREE.MeshStandardMaterial();
 
@@ -152,13 +158,16 @@
 			materialDebugUI.add(material, 'roughness').min(0).max(1).step(0.001);
 			materialDebugUI.add(material, 'metalness').min(0).max(1).step(0.001);
 
-			const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 16), material);
+			const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 16), material);
 			scene.add(sphere);
 
-			sphere.position.y = 0.5;
 			sphere.castShadow = true;
 
-			const plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), material);
+			const plane = new THREE.Mesh(
+				new THREE.PlaneGeometry(5, 5),
+				new THREE.MeshBasicMaterial({ map: shadowTexture })
+			);
+			plane.position.y = -0.5;
 			scene.add(plane);
 
 			plane.rotation.x = Math.PI * -0.5;
@@ -176,7 +185,7 @@
 			const renderer = new THREE.WebGLRenderer({
 				canvas
 			});
-			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.enabled = false;
 			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
