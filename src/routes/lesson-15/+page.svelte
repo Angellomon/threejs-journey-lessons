@@ -9,6 +9,8 @@
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
 
+	const showShadow = false;
+
 	if (browser) {
 		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
 
@@ -33,7 +35,10 @@
 
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
 			const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+
 			scene.add(directionalLight, directionalLightCameraHelper);
+
+			directionalLightCameraHelper.visible = showShadow;
 
 			directionalLight.castShadow = true;
 			directionalLight.shadow.mapSize.width = 1024;
@@ -53,7 +58,10 @@
 
 			const spotlight = new THREE.SpotLight(0xffffff, 1, 2, Math.PI * 0.2);
 			const spotlightCameraHelper = new THREE.CameraHelper(spotlight.shadow.camera);
+
 			scene.add(spotlight, spotlightCameraHelper, spotlight.target);
+
+			spotlightCameraHelper.visible = showShadow;
 
 			spotlight.castShadow = true;
 			spotlight.shadow.mapSize.width = 1024;
@@ -67,14 +75,16 @@
 			const pointLight = new THREE.PointLight(0xffffff, 2);
 			const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
 
+			scene.add(pointLight, pointLightCameraHelper);
+
+			pointLightCameraHelper.visible = showShadow;
+
 			pointLight.castShadow = true;
 			pointLight.shadow.mapSize.width = 1024;
 			pointLight.shadow.mapSize.height = 1024;
 			pointLight.shadow.camera.near = 0.1;
 			pointLight.shadow.camera.far = 5;
 			pointLight.position.set(-1, 1, 0);
-
-			scene.add(pointLight, pointLightCameraHelper);
 
 			const material = new THREE.MeshStandardMaterial();
 
@@ -90,10 +100,11 @@
 
 			const plane = new THREE.Mesh(
 				new THREE.PlaneGeometry(5, 5),
-				new THREE.MeshStandardMaterial()
-				// new THREE.MeshBasicMaterial({ map: bakedShadowTexture }),
+				// new THREE.MeshStandardMaterial()
+				new THREE.MeshBasicMaterial({ map: bakedShadowTexture })
 			);
 			plane.rotation.x = -Math.PI * 0.5;
+			plane.rotation.z = Math.PI * 1.25;
 			plane.position.y = -0.5;
 			scene.add(plane);
 
@@ -128,7 +139,7 @@
 			const renderer = new THREE.WebGLRenderer({
 				canvas
 			});
-			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.enabled = showShadow;
 			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 			renderer.setSize(cameraSizes.width, cameraSizes.height);
