@@ -156,7 +156,7 @@
 
 				sphereShadow.position.x = sphere.position.x;
 				sphereShadow.position.z = sphere.position.z;
-				sphereShadow.material.opacity = sphere.position.y;
+				sphereShadow.material.opacity = 1 - sphere.position.y;
 
 				renderer.render(scene, camera);
 
