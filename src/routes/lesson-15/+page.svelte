@@ -195,4 +195,8 @@
 	}
 </script>
 
+<svelte:head>
+	<title>15 - Shadows</title>
+</svelte:head>
+
 <canvas bind:this={canvas}></canvas>

@@ -303,4 +303,8 @@
 	}
 </script>
 
+<svelte:head>
+	<title>14 - Lights</title>
+</svelte:head>
+
 <canvas bind:this={canvas}></canvas>
