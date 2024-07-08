@@ -46,3 +46,32 @@ export class CameraFullSizes {
 		return document.querySelector(menuQuery)?.clientHeight || 0;
 	}
 }
+
+/**
+ * @property {number} width
+ * @property {number} height
+ */
+export class CameraFixedSizes {
+	/**
+	 * @param {number} width
+	 * @param {number} height
+	 */
+	constructor(width, height) {
+		this.width = width;
+		this.height = height;
+	}
+
+	/**
+	 * Get the sizes tuple [width, height]
+	 *
+	 * @readonly
+	 * @type {[number, number]}
+	 */
+	get sizes() {
+		return [this.width, this.height];
+	}
+
+	get aspect() {
+		return this.width / this.height;
+	}
+}
