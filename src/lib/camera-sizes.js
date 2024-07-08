@@ -8,7 +8,7 @@ export class CameraFullSizes {
 	/**
 	 * @param {string} menuQuery HTML Element query to substract its height, _if it doesn't exist, the substractable height becomes 0_
 	 */
-	constructor(menuQuery = '.menu') {
+	constructor(menuQuery = '') {
 		this.menuQuery = menuQuery;
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
