@@ -93,6 +93,26 @@ export function newSizes(width = 600, height = 600) {
 	};
 }
 
+export function isFullscreenActive() {
+	return !!document.fullscreenElement;
+}
+
+export function calculateMenuHeight(query = '.menu') {
+	return document.querySelector(query)?.clientHeight || 0;
+}
+
+export function newSizesFull(withMenu = false) {
+	const menuHeight = calculateMenuHeight();
+
+	const width = window.innerWidth;
+
+	let height = window.innerHeight;
+
+	if (withMenu) height = window.innerHeight - menuHeight;
+
+	return newSizes(width, height);
+}
+
 /**
  * Get Delta Time
  *
