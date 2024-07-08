@@ -1,8 +1,12 @@
-import { calculateMenuHeight } from './utils';
-
+/**
+ * Describes camera sizes given the width and height of a window considering a possible menu or other HTML element to substract its height
+ *
+ * @export
+ * @class CameraFullSizes
+ */
 export class CameraFullSizes {
 	/**
-	 * @param {string} menuQuery
+	 * @param {string} menuQuery HTML Element query to substract its height, _if it doesn't exist, the substractable height becomes 0_
 	 */
 	constructor(menuQuery = '.menu') {
 		this.menuQuery = menuQuery;
