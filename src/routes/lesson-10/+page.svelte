@@ -1,5 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
+	import { CameraFullSizes } from '$lib/camera-sizes';
 	import { createMeshBasicTexture, newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
@@ -9,8 +10,6 @@
 	let canvas;
 
 	if (browser) {
-		let menuHeight = document.querySelector('.menu')?.clientHeight || 0;
-
 		const loadingManager = new THREE.LoadingManager();
 
 		loadingManager.onStart = () => {
@@ -82,9 +81,9 @@
 			});
 			scene.add(cube);
 
-			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
+			const cameraSizes = new CameraFullSizes('.menu');
 
-			const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
+			const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect);
 
 			camera.position.z = 5;
 
@@ -94,7 +93,7 @@
 				canvas
 			});
 
-			renderer.setSize(cameraSizes.width, cameraSizes.height);
+			renderer.setSize(...cameraSizes.sizes);
 
 			function tick() {
 				renderer.render(scene, camera);
@@ -106,24 +105,15 @@
 
 			window.requestAnimationFrame(tick);
 			window.addEventListener('resize', () => {
-				menuHeight = document.querySelector('.menu')?.clientHeight || 0;
+				cameraSizes.updateSizes();
 
-				// @ts-ignore
-				const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-
-				cameraSizes.width = window.innerWidth;
-
-				if (!isFullscreen) cameraSizes.height = window.innerHeight - menuHeight;
-				else cameraSizes.height = window.innerHeight;
-
-				camera.aspect = cameraSizes.aspect();
+				camera.aspect = cameraSizes.aspect;
 				camera.updateProjectionMatrix();
 
-				renderer.setSize(cameraSizes.width, cameraSizes.height);
+				renderer.setSize(...cameraSizes.sizes);
 			});
 			canvas.addEventListener('dblclick', () => {
-				// @ts-ignore
-				const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+				const isFullscreen = !!document.fullscreenElement;
 
 				if (isFullscreen) document.exitFullscreen();
 				else canvas.requestFullscreen();

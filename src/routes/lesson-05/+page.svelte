@@ -1,8 +1,9 @@
 <script>
 	import * as THREE from 'three';
-	import { createMeshBasicCube, getDeltaTime, newSizes } from '$lib/utils';
+	import { createMeshBasicCube } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
+	import { CameraFixedSizes } from '$lib/camera-sizes';
 
 	/** @type {HTMLCanvasElement} */
 	let canvasNonGSAP;
@@ -35,9 +36,9 @@
 		cube3.position.z = 0;
 		cubesGroup.add(cube3);
 
-		const cameraSizes = newSizes(600, 600);
+		const cameraSizes = new CameraFixedSizes(600, 600);
 
-		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
+		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect);
 
 		camera.position.z = 5;
 
@@ -45,12 +46,13 @@
 			canvas: canvasNonGSAP
 		});
 
+		renderer.setSize(...cameraSizes.sizes);
+
 		let initialTime = Date.now();
 
 		const clock = new THREE.Clock();
 
 		function tick() {
-			const deltaTime = getDeltaTime(initialTime);
 			const elapsedTime = clock.getElapsedTime();
 
 			initialTime = Date.now();
@@ -71,7 +73,6 @@
 			cube2.scale.set(cube2Scale, cube2Scale, cube2Scale);
 			cube3.scale.set(cube3Scale, cube3Scale, cube3Scale);
 
-			renderer.setSize(cameraSizes.width, cameraSizes.height);
 			renderer.render(scene, camera);
 
 			window.requestAnimationFrame(tick);
@@ -101,9 +102,9 @@
 		cube3.position.z = 0;
 		cubesGroup.add(cube3);
 
-		const cameraSizes = newSizes(600, 600);
+		const cameraSizes = new CameraFixedSizes(600, 600);
 
-		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
+		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect);
 
 		camera.position.z = 5;
 

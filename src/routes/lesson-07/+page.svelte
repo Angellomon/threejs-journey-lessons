@@ -1,5 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
+	import { CameraFullSizes } from '$lib/camera-sizes';
 	import { createMeshBasicCube, newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
@@ -10,67 +11,58 @@
 	/**@type {HTMLCanvasElement}*/
 	let canvas;
 
-	if (browser) {
-		const menuHeight = document.querySelector('.menu')?.clientHeight || 0;
+	function setupScene() {
+		const scene = new THREE.Scene();
 
-		function setupScene() {
-			const scene = new THREE.Scene();
+		const cubesGroup = new THREE.Group();
 
-			const cubesGroup = new THREE.Group();
+		scene.add(cubesGroup);
 
-			scene.add(cubesGroup);
+		const redCube = createMeshBasicCube(1, 0xff0000);
+		cubesGroup.add(redCube);
 
-			const redCube = createMeshBasicCube(1, 0xff0000);
-			cubesGroup.add(redCube);
+		const cameraSizes = new CameraFullSizes('.menu');
 
-			const cameraSizes = newSizes(window.innerWidth, window.innerHeight - menuHeight);
+		const camera = new THREE.PerspectiveCamera(DEFAULT_FOV, cameraSizes.aspect);
 
-			const camera = new THREE.PerspectiveCamera(DEFAULT_FOV, cameraSizes.aspect());
+		const controls = new OrbitControls(camera, canvas);
 
-			const controls = new OrbitControls(camera, canvas);
+		camera.position.z = 5;
 
-			camera.position.z = 5;
+		const renderer = new THREE.WebGLRenderer({
+			canvas
+		});
 
-			const renderer = new THREE.WebGLRenderer({
-				canvas
-			});
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		renderer.setSize(cameraSizes.width, cameraSizes.height);
 
-			renderer.setSize(cameraSizes.width, cameraSizes.height);
+		function tick() {
+			renderer.render(scene, camera);
 
-			function tick() {
-				renderer.render(scene, camera);
-
-				controls.update();
-
-				window.requestAnimationFrame(tick);
-			}
+			controls.update();
 
 			window.requestAnimationFrame(tick);
-			window.addEventListener('resize', () => {
-				// @ts-ignore
-				const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-
-				cameraSizes.width = window.innerWidth;
-
-				if (!isFullscreen) cameraSizes.height = window.innerHeight - menuHeight;
-				else cameraSizes.height = window.innerHeight;
-
-				camera.aspect = cameraSizes.aspect();
-				camera.updateProjectionMatrix();
-
-				renderer.setSize(cameraSizes.width, cameraSizes.height);
-			});
-			window.addEventListener('dblclick', () => {
-				// @ts-ignore
-				const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-
-				if (!isFullscreen) canvas.requestFullscreen();
-				else document.exitFullscreen();
-			});
 		}
 
+		window.requestAnimationFrame(tick);
+		window.addEventListener('resize', () => {
+			cameraSizes.updateSizes();
+
+			camera.aspect = cameraSizes.aspect;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize(...cameraSizes.sizes);
+		});
+		window.addEventListener('dblclick', () => {
+			const isFullscreen = !!document.fullscreenElement;
+
+			if (isFullscreen) document.exitFullscreen();
+			else canvas.requestFullscreen();
+		});
+	}
+
+	if (browser) {
 		onMount(() => {
 			setupScene();
 		});

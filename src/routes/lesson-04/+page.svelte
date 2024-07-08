@@ -1,4 +1,5 @@
 <script>
+	import { CameraFixedSizes } from '$lib/camera-sizes';
 	import { newSizes } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
@@ -73,8 +74,8 @@
 
 		// camera
 
-		const cameraSizes = newSizes();
-		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect());
+		const cameraSizes = new CameraFixedSizes(600, 600);
+		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect);
 
 		camera.position.z = 6;
 
@@ -88,7 +89,7 @@
 			canvas
 		});
 
-		renderer.setSize(cameraSizes.width, cameraSizes.width);
+		renderer.setSize(...cameraSizes.sizes);
 		renderer.render(scene, camera);
 	});
 </script>

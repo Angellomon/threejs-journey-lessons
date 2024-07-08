@@ -1,11 +1,12 @@
 <script>
-	import { createMeshBasicCube, newSizes } from '$lib/utils';
+	import { createMeshBasicCube } from '$lib/utils';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 	import GUI from 'lil-gui';
 	import { browser } from '$app/environment';
 	import gsap from 'gsap';
+	import { CameraFixedSizes } from '$lib/camera-sizes';
 
 	/** @type {HTMLCanvasElement}*/
 	let canvasPerspectiveCamera;
@@ -32,10 +33,10 @@
 				repeat: -1
 			});
 
-			const cameraSizes = newSizes();
+			const cameraSizes = new CameraFixedSizes(600, 600);
 			const cameraSettings = {
 				fov: 75,
-				aspect: cameraSizes.aspect(),
+				aspect: cameraSizes.aspect,
 				near: 0.001,
 				far: 90,
 				lookAt: true
@@ -56,7 +57,7 @@
 			const renderer = new THREE.WebGLRenderer({
 				canvas: canvasPerspectiveCamera
 			});
-			renderer.setSize(cameraSizes.width, cameraSizes.height);
+			renderer.setSize(...cameraSizes.sizes);
 
 			perspectiveCameraGUI.add(cameraSettings, 'lookAt').onChange((/**@type{boolean}*/ lookAt) => {
 				if (lookAt) camera.lookAt(cube.position);
@@ -142,10 +143,10 @@
 				repeat: -1
 			});
 
-			const cameraSizes = newSizes();
+			const cameraSizes = new CameraFixedSizes(600, 600);
 			const cameraSettings = {
-				left: -1 * cameraSizes.aspect(),
-				right: 1 * cameraSizes.aspect(),
+				left: -1 * cameraSizes.aspect,
+				right: 1 * cameraSizes.aspect,
 				top: 1,
 				bottom: -1,
 				near: 0.1,
@@ -172,7 +173,7 @@
 				canvas: canvasOrthographicCamera
 			});
 
-			renderer.setSize(cameraSizes.width, cameraSizes.height);
+			renderer.setSize(...cameraSizes.sizes);
 
 			orthographicCameraGUI.add(cameraSettings, 'lookAt').onChange((/**@type{boolean}*/ lookAt) => {
 				if (lookAt) camera.lookAt(cube.position);
@@ -221,14 +222,14 @@
 			orthographicCameraGUI
 				.add(cameraSettings, 'left', -10, 10, 1)
 				.onChange((/**@type{number}*/ newLeft) => {
-					camera.left = newLeft * cameraSizes.aspect();
+					camera.left = newLeft * cameraSizes.aspect;
 					camera.updateProjectionMatrix();
 				});
 
 			orthographicCameraGUI
 				.add(cameraSettings, 'right', -10, 10, 1)
 				.onChange((/**@type{number}*/ newRight) => {
-					camera.right = newRight * cameraSizes.aspect();
+					camera.right = newRight * cameraSizes.aspect;
 					camera.updateProjectionMatrix();
 				});
 
