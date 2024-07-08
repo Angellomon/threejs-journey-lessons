@@ -43,6 +43,9 @@
 
 				<a href="/lesson-15"><Menubar.Item>15 - Shadows</Menubar.Item></a>
 				<Menubar.Separator />
+
+				<a href="/lesson-16"><Menubar.Item>16 - Haunted House</Menubar.Item></a>
+				<Menubar.Separator />
 			</Menubar.Content>
 		</Menubar.Menu>
 	</Menubar.Root>
