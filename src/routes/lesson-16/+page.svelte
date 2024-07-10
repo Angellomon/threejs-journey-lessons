@@ -84,6 +84,38 @@
 
 		houseDoor.position.set(0, 1, 1.98);
 
+		const bushGeometry = new THREE.SphereGeometry(1, 16, 16);
+		const bushMaterial = new THREE.MeshStandardMaterial({
+			color: 0x00ff00
+		});
+
+		const frontBushes = new THREE.Group();
+		scene.add(frontBushes);
+
+		const bush1 = new THREE.Mesh(bushGeometry, bushMaterial);
+		frontBushes.add(bush1);
+
+		bush1.scale.setScalar(0.5);
+		bush1.position.set(0.9, 0.2, 2.2);
+
+		const bush2 = new THREE.Mesh(bushGeometry, bushMaterial);
+		frontBushes.add(bush2);
+
+		bush2.scale.setScalar(0.25);
+		bush2.position.set(1.5, 0.15, 2.2);
+
+		const bush3 = new THREE.Mesh(bushGeometry, bushMaterial);
+		frontBushes.add(bush3);
+
+		bush3.scale.setScalar(0.45);
+		bush3.position.set(-0.8, 0.2, 2.2);
+
+		const bush4 = new THREE.Mesh(bushGeometry, bushMaterial);
+		frontBushes.add(bush4);
+
+		bush4.scale.setScalar(0.22);
+		bush4.position.set(-1.4, 0.12, 2.1);
+
 		const renderer = new THREE.WebGLRenderer({
 			canvas
 		});
