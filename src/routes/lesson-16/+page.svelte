@@ -12,6 +12,8 @@
 	function setupScene() {
 		const scene = new THREE.Scene();
 
+		const textureLoader = new THREE.TextureLoader();
+
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
 		const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
@@ -54,13 +56,33 @@
 		houseRoof.position.set(0, 3.25, 0);
 		houseRoof.rotation.y = Math.PI * 0.25;
 
+		const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+		const dooorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+		const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
+		const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+		const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+		const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+		const doorRoughnessMap = textureLoader.load('/textures/door/roughness.jpg');
+
 		const houseDoor = new THREE.Mesh(
-			new THREE.PlaneGeometry(1, 2, 4, 4),
-			new THREE.MeshStandardMaterial({ roughness: 0.7, color: 0xff0000 })
+			new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
+			new THREE.MeshStandardMaterial({
+				map: doorColorTexture,
+				alphaMap: dooorAlphaTexture,
+				aoMap: doorAmbientOcclusionTexture,
+				displacementMap: doorHeightTexture,
+				metalnessMap: doorMetalnessTexture,
+				roughnessMap: doorRoughnessMap,
+				normalMap: doorNormalTexture,
+				transparent: true,
+				metalness: 0.45,
+				roughness: 0.65,
+				displacementScale: 0.1
+			})
 		);
 		houseGroup.add(houseDoor);
 
-		houseDoor.position.set(0, 1, 2.001);
+		houseDoor.position.set(0, 1, 1.98);
 
 		const renderer = new THREE.WebGLRenderer({
 			canvas
