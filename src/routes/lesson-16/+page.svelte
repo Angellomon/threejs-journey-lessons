@@ -46,13 +46,21 @@
 		houseWalls.position.set(0, 1.25, 0);
 
 		const houseRoof = new THREE.Mesh(
-			new THREE.ConeGeometry(3.5, 1, 4, 1),
-			new THREE.MeshStandardMaterial({ roughness: 0.7, color: 0xff0000 })
+			new THREE.ConeGeometry(3.5, 1.5, 4, 1),
+			new THREE.MeshStandardMaterial()
 		);
 		houseGroup.add(houseRoof);
 
-		houseRoof.position.set(0, 3, 0);
+		houseRoof.position.set(0, 3.25, 0);
 		houseRoof.rotation.y = Math.PI * 0.25;
+
+		const houseDoor = new THREE.Mesh(
+			new THREE.PlaneGeometry(1, 2, 4, 4),
+			new THREE.MeshStandardMaterial({ roughness: 0.7, color: 0xff0000 })
+		);
+		houseGroup.add(houseDoor);
+
+		houseDoor.position.set(0, 1, 2.001);
 
 		const renderer = new THREE.WebGLRenderer({
 			canvas
