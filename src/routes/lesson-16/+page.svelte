@@ -28,12 +28,11 @@
 		const controls = new OrbitControls(camera, canvas);
 		controls.enableDamping = true;
 
-		const sphere = new THREE.Mesh(
-			new THREE.SphereGeometry(1, 32, 32),
-			new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7 })
-		);
+		const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshStandardMaterial());
+		scene.add(floor);
 
-		scene.add(sphere);
+		floor.rotation.x = Math.PI * -0.5;
+		floor.position.y = 0;
 
 		const renderer = new THREE.WebGLRenderer({
 			canvas
