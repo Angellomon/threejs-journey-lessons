@@ -14,16 +14,19 @@
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
 
 		scene.add(ambientLight, directionalLight);
 
 		const cameraSizes = new CameraFullSizes('.menu');
 
 		const camera = new THREE.PerspectiveCamera(75, cameraSizes.aspect);
+		camera.position.x = 4;
+		camera.position.y = 2;
 		camera.position.z = 5;
 
 		const controls = new OrbitControls(camera, canvas);
+		controls.enableDamping = true;
 
 		const sphere = new THREE.Mesh(
 			new THREE.SphereGeometry(1, 32, 32),
