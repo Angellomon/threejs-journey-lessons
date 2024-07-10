@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	import { Timer } from 'three/addons/misc/Timer.js';
 
 	/**@type{HTMLCanvasElement}*/
 	let canvas;
@@ -11,9 +12,9 @@
 	function setupScene() {
 		const scene = new THREE.Scene();
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
 
 		scene.add(ambientLight, directionalLight);
 
@@ -25,8 +26,8 @@
 		const controls = new OrbitControls(camera, canvas);
 
 		const sphere = new THREE.Mesh(
-			new THREE.SphereGeometry(0.5, 64, 64),
-			new THREE.MeshStandardMaterial({ color: 0xffffff })
+			new THREE.SphereGeometry(1, 32, 32),
+			new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7 })
 		);
 
 		scene.add(sphere);
@@ -35,11 +36,20 @@
 			canvas
 		});
 		renderer.setSize(cameraSizes.width, cameraSizes.height);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-		function tick() {
+		const timer = new Timer();
+
+		function render() {
 			renderer.render(scene, camera);
 
 			controls.update();
+		}
+
+		function tick() {
+			timer.update();
+
+			render();
 
 			window.requestAnimationFrame(tick);
 		}
