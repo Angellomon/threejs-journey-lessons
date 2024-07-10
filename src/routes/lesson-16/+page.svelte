@@ -116,6 +116,35 @@
 		bush4.scale.setScalar(0.22);
 		bush4.position.set(-1.4, 0.12, 2.1);
 
+		const graves = new THREE.Group();
+		scene.add(graves);
+
+		const graveGeometry = new THREE.BoxGeometry(0.4, 0.8, 0.15);
+		const graveMaterial = new THREE.MeshStandardMaterial({
+			color: 0x4f4f4f
+		});
+
+		const TOTAL_GRAVES = 30;
+
+		for (let i = 0; i < TOTAL_GRAVES; i++) {
+			const angle = Math.random() * Math.PI * 2;
+
+			const x = Math.sin(angle) * (Math.random() * 4 + 5);
+			const z = Math.cos(angle) * (Math.random() * 4 + 5);
+
+			const grave = new THREE.Mesh(graveGeometry, graveMaterial);
+
+			grave.position.x = x;
+			grave.position.z = z;
+			grave.position.y = Math.min(Math.random(), 0.2);
+			// grave.position.y = Math.abs(Math.random() - 0.5) - 0.1;
+
+			grave.rotation.y = Math.random() * Math.PI;
+			grave.rotation.z = (Math.random() - 0.5) * Math.PI * 0.07;
+
+			graves.add(grave);
+		}
+
 		const renderer = new THREE.WebGLRenderer({
 			canvas
 		});
