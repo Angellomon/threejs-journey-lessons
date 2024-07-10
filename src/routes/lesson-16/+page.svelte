@@ -34,6 +34,26 @@
 		floor.rotation.x = Math.PI * -0.5;
 		floor.position.y = 0;
 
+		const houseGroup = new THREE.Group();
+		scene.add(houseGroup);
+
+		const houseWalls = new THREE.Mesh(
+			new THREE.BoxGeometry(4, 2.5, 4),
+			new THREE.MeshStandardMaterial()
+		);
+		houseGroup.add(houseWalls);
+
+		houseWalls.position.set(0, 1.25, 0);
+
+		const houseRoof = new THREE.Mesh(
+			new THREE.ConeGeometry(3.5, 1, 4, 1),
+			new THREE.MeshStandardMaterial({ roughness: 0.7, color: 0xff0000 })
+		);
+		houseGroup.add(houseRoof);
+
+		houseRoof.position.set(0, 3, 0);
+		houseRoof.rotation.y = Math.PI * 0.25;
+
 		const renderer = new THREE.WebGLRenderer({
 			canvas
 		});
