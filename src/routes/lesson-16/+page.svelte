@@ -112,9 +112,37 @@
 
 		houseWalls.position.set(0, 1.25, 0);
 
+		const roofColorTexture = textureLoader.load('/textures/roof/grey_roof_tiles_02_diff_1k.jpg');
+		const roofNormalTexture = textureLoader.load('/textures/roof/grey_roof_tiles_02_nor_gl_1k.jpg');
+		const roofARMTexture = textureLoader.load('/textures/roof/grey_roof_tiles_02_arm_1k.jpg');
+
+		roofColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+		roofColorTexture.repeat.set(6, 3);
+		roofARMTexture.repeat.set(6, 3);
+		roofNormalTexture.repeat.set(6, 3);
+
+		roofColorTexture.rotation = Math.PI;
+		roofARMTexture.rotation = Math.PI;
+		roofNormalTexture.rotation = Math.PI;
+
+		roofColorTexture.wrapS = THREE.RepeatWrapping;
+		roofARMTexture.wrapS = THREE.RepeatWrapping;
+		roofNormalTexture.wrapS = THREE.RepeatWrapping;
+
+		roofColorTexture.wrapT = THREE.RepeatWrapping;
+		roofARMTexture.wrapT = THREE.RepeatWrapping;
+		roofNormalTexture.wrapT = THREE.RepeatWrapping;
+
 		const houseRoof = new THREE.Mesh(
 			new THREE.ConeGeometry(3.5, 1.5, 4, 1),
-			new THREE.MeshStandardMaterial()
+			new THREE.MeshStandardMaterial({
+				map: roofColorTexture,
+				aoMap: roofARMTexture,
+				roughnessMap: roofNormalTexture,
+				metalnessMap: roofARMTexture,
+				normalMap: roofNormalTexture
+			})
 		);
 		houseGroup.add(houseRoof);
 
