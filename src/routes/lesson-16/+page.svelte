@@ -56,10 +56,10 @@
 		floorNormalMap.wrapT = THREE.RepeatWrapping;
 		floorARMMap.wrapT = THREE.RepeatWrapping;
 
-		floorColorMap.repeat.set(4, 4);
-		floorHeightMap.repeat.set(4, 4);
-		floorNormalMap.repeat.set(4, 4);
-		floorARMMap.repeat.set(4, 4);
+		floorColorMap.repeat.set(8, 8);
+		floorHeightMap.repeat.set(8, 8);
+		floorNormalMap.repeat.set(8, 8);
+		floorARMMap.repeat.set(8, 8);
 
 		const floor = new THREE.Mesh(
 			new THREE.PlaneGeometry(20, 20, 100, 100),
@@ -70,30 +70,16 @@
 				metalnessMap: floorARMMap,
 				normalMap: floorNormalMap,
 				displacementMap: floorHeightMap,
-				// alphaMap: floorAlphaMap,
+				alphaMap: floorAlphaMap,
 				displacementScale: 0.3,
-				displacementBias: -0.12,
-				// roughness: 0.8,
-				// metalness: 0.01,
+				displacementBias: -0.026,
+				roughness: 1,
+				metalness: 0,
 				transparent: true
 				// wireframe: true
 			})
 		);
 		scene.add(floor);
-
-		debugGUI
-			.add(floor.material, 'displacementScale')
-			.min(0)
-			.max(1)
-			.step(0.001)
-			.name('floor displacement scale');
-
-		debugGUI
-			.add(floor.material, 'displacementBias')
-			.min(-1)
-			.max(1)
-			.step(0.001)
-			.name('floor displacement bias');
 
 		floor.rotation.x = Math.PI * -0.5;
 		floor.position.y = 0;
@@ -101,37 +87,24 @@
 		const houseGroup = new THREE.Group();
 		scene.add(houseGroup);
 
-		// const wallColorTexture = textureLoader.load('/textures/walls/medieval_red_brick_diff_1k.jpg');
-		// const wallHeightTexture = textureLoader.load('/textures/walls/medieval_red_brick_disp_1k.png');
-		// const wallNormalTexture = textureLoader.load(
-		// 	'/textures/walls/medieval_red_brick_nor_gl_1k.exr'
-		// );
-		// const wallRoughnessTexture = textureLoader.load(
-		// 	'/textures/walls/medieval_red_brick_rough_1k.exr'
-		// );
+		const wallColorTexture = textureLoader.load('/textures/walls/medieval_red_brick_diff_1k.jpg');
+		const wallNormalTexture = textureLoader.load(
+			'/textures/walls/medieval_red_brick_nor_gl_1k.jpg'
+		);
+		const wallARMTexture = textureLoader.load('/textures/walls/medieval_red_brick_arm_1k.jpg');
 
-		// wallColorTexture.colorSpace = THREE.SRGBColorSpace;
-
-		// wallColorTexture.repeat.set(1, 1);
-		// wallHeightTexture.repeat.set(1, 1);
-
-		// wallColorTexture.wrapS = THREE.RepeatWrapping;
-		// wallHeightTexture.wrapS = THREE.RepeatWrapping;
-
-		// wallColorTexture.wrapT = THREE.RepeatWrapping;
-		// wallHeightTexture.wrapT = THREE.RepeatWrapping;
+		wallColorTexture.colorSpace = THREE.SRGBColorSpace;
 
 		const houseWalls = new THREE.Mesh(
 			new THREE.BoxGeometry(4, 2.5, 4),
 			new THREE.MeshStandardMaterial({
-				// map: wallColorTexture,
-				// // displacementMap: wallHeightTexture,
-				// // displacementScale: 0.08,
-				// // displacementBias: 0,
-				// normalMap: wallNormalTexture,
-				// roughnessMap: wallRoughnessTexture,
-				// roughness: 0.6,
-				// transparent: true
+				map: wallColorTexture,
+				normalMap: wallNormalTexture,
+				aoMap: wallARMTexture,
+				roughnessMap: wallARMTexture,
+				metalnessMap: wallARMTexture,
+				roughness: 0.9,
+				transparent: true
 				// wireframe: true
 			})
 		);
