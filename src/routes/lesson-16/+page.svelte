@@ -1,6 +1,7 @@
 <script>
 	import { browser } from '$app/environment';
 	import { CameraFullSizes } from '$lib/camera-sizes';
+	import GUI from 'lil-gui';
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -10,13 +11,15 @@
 	let canvas;
 
 	function setupScene() {
+		const debugGUI = new GUI();
+
 		const scene = new THREE.Scene();
 
 		const textureLoader = new THREE.TextureLoader();
 
 		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 
 		scene.add(ambientLight, directionalLight);
 
@@ -30,8 +33,59 @@
 		const controls = new OrbitControls(camera, canvas);
 		controls.enableDamping = true;
 
-		const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshStandardMaterial());
+		const floorAlphaMap = textureLoader.load('/textures/floor/alpha.jpg');
+		const floorColorMap = textureLoader.load('/textures/floor/leafy_grass_diff_1k.jpg');
+		const floorHeightMap = textureLoader.load('/textures/floor/leafy_grass_disp_1k.jpg');
+		const floorNormalMap = textureLoader.load('/textures/floor/leafy_grass_nor_gl_1k.jpg');
+
+		// Ambient Occlusion + Roughness + Metalness
+		const floorARMMap = textureLoader.load('/textures/floor/leafy_grass_arm_1k.jpg');
+
+		floorColorMap.colorSpace = THREE.SRGBColorSpace;
+		// floorHeightMap.colorSpace = THREE.SRGBColorSpace;
+		// floorNormalMap.colorSpace = THREE.SRGBColorSpace;
+		// floorARMMap.colorSpace = THREE.SRGBColorSpace;
+
+		floorColorMap.wrapS = THREE.RepeatWrapping;
+		floorHeightMap.wrapS = THREE.RepeatWrapping;
+		floorNormalMap.wrapS = THREE.RepeatWrapping;
+		floorARMMap.wrapS = THREE.RepeatWrapping;
+
+		floorColorMap.wrapT = THREE.RepeatWrapping;
+		floorHeightMap.wrapT = THREE.RepeatWrapping;
+		floorNormalMap.wrapT = THREE.RepeatWrapping;
+		floorARMMap.wrapT = THREE.RepeatWrapping;
+
+		floorColorMap.repeat.set(5, 5);
+		floorHeightMap.repeat.set(5, 5);
+		floorNormalMap.repeat.set(5, 5);
+		floorARMMap.repeat.set(5, 5);
+
+		const floor = new THREE.Mesh(
+			new THREE.PlaneGeometry(20, 20, 100, 100),
+			new THREE.MeshStandardMaterial({
+				map: floorColorMap,
+				normalMap: floorNormalMap,
+				alphaMap: floorAlphaMap,
+				displacementMap: floorHeightMap,
+				displacementScale: 0.1,
+				roughness: 0.8,
+				metalness: 0.01,
+				aoMap: floorARMMap,
+				roughnessMap: floorARMMap,
+				metalnessMap: floorARMMap,
+				transparent: true
+				// wireframe: true
+			})
+		);
 		scene.add(floor);
+
+		debugGUI
+			.add(floor.material, 'displacementScale')
+			.min(0)
+			.max(1)
+			.step(0.001)
+			.name('floor displacement scale');
 
 		floor.rotation.x = Math.PI * -0.5;
 		floor.position.y = 0;
@@ -39,9 +93,39 @@
 		const houseGroup = new THREE.Group();
 		scene.add(houseGroup);
 
+		// const wallColorTexture = textureLoader.load('/textures/walls/medieval_red_brick_diff_1k.jpg');
+		// const wallHeightTexture = textureLoader.load('/textures/walls/medieval_red_brick_disp_1k.png');
+		// const wallNormalTexture = textureLoader.load(
+		// 	'/textures/walls/medieval_red_brick_nor_gl_1k.exr'
+		// );
+		// const wallRoughnessTexture = textureLoader.load(
+		// 	'/textures/walls/medieval_red_brick_rough_1k.exr'
+		// );
+
+		// wallColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+		// wallColorTexture.repeat.set(1, 1);
+		// wallHeightTexture.repeat.set(1, 1);
+
+		// wallColorTexture.wrapS = THREE.RepeatWrapping;
+		// wallHeightTexture.wrapS = THREE.RepeatWrapping;
+
+		// wallColorTexture.wrapT = THREE.RepeatWrapping;
+		// wallHeightTexture.wrapT = THREE.RepeatWrapping;
+
 		const houseWalls = new THREE.Mesh(
 			new THREE.BoxGeometry(4, 2.5, 4),
-			new THREE.MeshStandardMaterial()
+			new THREE.MeshStandardMaterial({
+				// map: wallColorTexture,
+				// // displacementMap: wallHeightTexture,
+				// // displacementScale: 0.08,
+				// // displacementBias: 0,
+				// normalMap: wallNormalTexture,
+				// roughnessMap: wallRoughnessTexture,
+				// roughness: 0.6,
+				// transparent: true
+				// wireframe: true
+			})
 		);
 		houseGroup.add(houseWalls);
 
@@ -64,6 +148,8 @@
 		const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
 		const doorRoughnessMap = textureLoader.load('/textures/door/roughness.jpg');
 
+		doorColorTexture.colorSpace = THREE.SRGBColorSpace;
+
 		const houseDoor = new THREE.Mesh(
 			new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
 			new THREE.MeshStandardMaterial({
@@ -82,7 +168,7 @@
 		);
 		houseGroup.add(houseDoor);
 
-		houseDoor.position.set(0, 1, 1.98);
+		houseDoor.position.set(0, 1, 2);
 
 		const bushGeometry = new THREE.SphereGeometry(1, 16, 16);
 		const bushMaterial = new THREE.MeshStandardMaterial({
