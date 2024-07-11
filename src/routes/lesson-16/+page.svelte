@@ -17,9 +17,9 @@
 
 		const textureLoader = new THREE.TextureLoader();
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
 
 		scene.add(ambientLight, directionalLight);
 
@@ -42,9 +42,9 @@
 		const floorARMMap = textureLoader.load('/textures/floor/leafy_grass_arm_1k.jpg');
 
 		floorColorMap.colorSpace = THREE.SRGBColorSpace;
-		// floorHeightMap.colorSpace = THREE.SRGBColorSpace;
-		// floorNormalMap.colorSpace = THREE.SRGBColorSpace;
-		// floorARMMap.colorSpace = THREE.SRGBColorSpace;
+		floorHeightMap.colorSpace = THREE.SRGBColorSpace;
+		floorNormalMap.colorSpace = THREE.SRGBColorSpace;
+		floorARMMap.colorSpace = THREE.SRGBColorSpace;
 
 		floorColorMap.wrapS = THREE.RepeatWrapping;
 		floorHeightMap.wrapS = THREE.RepeatWrapping;
@@ -56,24 +56,25 @@
 		floorNormalMap.wrapT = THREE.RepeatWrapping;
 		floorARMMap.wrapT = THREE.RepeatWrapping;
 
-		floorColorMap.repeat.set(5, 5);
-		floorHeightMap.repeat.set(5, 5);
-		floorNormalMap.repeat.set(5, 5);
-		floorARMMap.repeat.set(5, 5);
+		floorColorMap.repeat.set(4, 4);
+		floorHeightMap.repeat.set(4, 4);
+		floorNormalMap.repeat.set(4, 4);
+		floorARMMap.repeat.set(4, 4);
 
 		const floor = new THREE.Mesh(
 			new THREE.PlaneGeometry(20, 20, 100, 100),
 			new THREE.MeshStandardMaterial({
 				map: floorColorMap,
-				normalMap: floorNormalMap,
-				alphaMap: floorAlphaMap,
-				displacementMap: floorHeightMap,
-				displacementScale: 0.1,
-				roughness: 0.8,
-				metalness: 0.01,
 				aoMap: floorARMMap,
 				roughnessMap: floorARMMap,
 				metalnessMap: floorARMMap,
+				normalMap: floorNormalMap,
+				displacementMap: floorHeightMap,
+				// alphaMap: floorAlphaMap,
+				displacementScale: 0.3,
+				displacementBias: -0.12,
+				// roughness: 0.8,
+				// metalness: 0.01,
 				transparent: true
 				// wireframe: true
 			})
@@ -86,6 +87,13 @@
 			.max(1)
 			.step(0.001)
 			.name('floor displacement scale');
+
+		debugGUI
+			.add(floor.material, 'displacementBias')
+			.min(-1)
+			.max(1)
+			.step(0.001)
+			.name('floor displacement bias');
 
 		floor.rotation.x = Math.PI * -0.5;
 		floor.position.y = 0;
