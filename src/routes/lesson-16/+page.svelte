@@ -118,9 +118,9 @@
 
 		roofColorTexture.colorSpace = THREE.SRGBColorSpace;
 
-		roofColorTexture.repeat.set(6, 3);
-		roofARMTexture.repeat.set(6, 3);
-		roofNormalTexture.repeat.set(6, 3);
+		roofColorTexture.repeat.set(12, 3);
+		roofARMTexture.repeat.set(12, 3);
+		roofNormalTexture.repeat.set(12, 3);
 
 		roofColorTexture.rotation = Math.PI;
 		roofARMTexture.rotation = Math.PI;
