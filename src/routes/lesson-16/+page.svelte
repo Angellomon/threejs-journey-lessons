@@ -179,9 +179,30 @@
 
 		houseDoor.position.set(0, 1, 2);
 
+		const bushColorTexture = textureLoader.load(
+			'/textures/bushes/leaves_forest_ground_diff_1k.jpg'
+		);
+
+		bushColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+		const bushARMTexture = textureLoader.load('/textures/bushes/leaves_forest_ground_arm_1k.jpg');
+		const bushNormalsTexture = textureLoader.load(
+			'/textures/bushes/leaves_forest_ground_nor_dx_1k.jpg'
+		);
+		// const bushHeightTexture = textureLoader.load(
+		// 	'/textures/bushes/leaves_forest_ground_disp_1k.png'
+		// );
+
 		const bushGeometry = new THREE.SphereGeometry(1, 16, 16);
 		const bushMaterial = new THREE.MeshStandardMaterial({
-			color: 0x00ff00
+			color: 0xccffcc,
+			map: bushColorTexture,
+			aoMap: bushARMTexture,
+			roughnessMap: bushARMTexture,
+			metalnessMap: bushARMTexture,
+			normalMap: bushNormalsTexture
+			// displacementMap: bushHeightTexture, // messes up the performance
+			// displacementScale: 0.3
 		});
 
 		const frontBushes = new THREE.Group();
@@ -192,24 +213,28 @@
 
 		bush1.scale.setScalar(0.5);
 		bush1.position.set(0.9, 0.2, 2.2);
+		bush1.rotation.x = Math.PI * -0.3;
 
 		const bush2 = new THREE.Mesh(bushGeometry, bushMaterial);
 		frontBushes.add(bush2);
 
 		bush2.scale.setScalar(0.25);
 		bush2.position.set(1.5, 0.15, 2.2);
+		bush2.rotation.x = Math.PI * -0.3;
 
 		const bush3 = new THREE.Mesh(bushGeometry, bushMaterial);
 		frontBushes.add(bush3);
 
 		bush3.scale.setScalar(0.45);
 		bush3.position.set(-0.8, 0.2, 2.2);
+		bush3.rotation.x = Math.PI * -0.3;
 
 		const bush4 = new THREE.Mesh(bushGeometry, bushMaterial);
 		frontBushes.add(bush4);
 
 		bush4.scale.setScalar(0.22);
 		bush4.position.set(-1.4, 0.12, 2.1);
+		bush4.rotation.x = Math.PI * -0.3;
 
 		const graves = new THREE.Group();
 		scene.add(graves);
