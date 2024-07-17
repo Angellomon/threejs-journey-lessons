@@ -306,6 +306,12 @@
 			graves.add(grave);
 		}
 
+		const purpleGhost = new THREE.PointLight(0x8800ff, 6);
+		const pinkGhost = new THREE.PointLight(0xff0088, 6);
+		const redGhost = new THREE.PointLight(0xff0000, 6);
+
+		scene.add(purpleGhost, pinkGhost, redGhost);
+
 		const renderer = new THREE.WebGLRenderer({
 			canvas
 		});
@@ -315,6 +321,26 @@
 		const timer = new Timer();
 
 		function render() {
+			const elapsedTime = timer.getElapsed();
+
+			const purpleGhostAngle = elapsedTime * 0.5;
+			purpleGhost.position.x = Math.sin(purpleGhostAngle) * 4;
+			purpleGhost.position.z = Math.cos(purpleGhostAngle) * 4;
+			purpleGhost.position.y =
+				Math.sin(elapsedTime) * Math.sin(elapsedTime * 2.34) * Math.sin(elapsedTime * 3.45);
+
+			const pinkGhostAngle = elapsedTime * -0.5;
+			pinkGhost.position.x = Math.sin(pinkGhostAngle) * 5;
+			pinkGhost.position.z = Math.cos(pinkGhostAngle) * 5;
+			pinkGhost.position.y =
+				Math.sin(elapsedTime) * Math.sin(elapsedTime * 2.34) * Math.sin(elapsedTime * 3.45);
+
+			const redGhostAngle = elapsedTime * -0.3;
+			redGhost.position.x = Math.sin(redGhostAngle) * 6;
+			redGhost.position.z = Math.cos(redGhostAngle) * 6;
+			redGhost.position.y =
+				Math.sin(elapsedTime) * Math.sin(elapsedTime * 2.34) * Math.sin(elapsedTime * 3.45);
+
 			renderer.render(scene, camera);
 
 			controls.update();
