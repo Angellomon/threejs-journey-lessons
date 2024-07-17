@@ -239,9 +239,44 @@
 		const graves = new THREE.Group();
 		scene.add(graves);
 
+		const graveColorTexture = textureLoader.load('/textures/graves/concrete_wall_005_diff_1k.jpg');
+
+		graveColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+		const graveARMTexture = textureLoader.load('/textures/graves/concrete_wall_005_arm_1k.jpg');
+		const graveNormalsTexture = textureLoader.load(
+			'/textures/graves/concrete_wall_005_nor_dx_1k.jpg'
+		);
+		graves;
+		const graveHeightTexture = textureLoader.load('/textures/graves/concrete_wall_005_disp_1k.png');
+
+		graveColorTexture.repeat.set(0.3, 0.4);
+		graveColorTexture.wrapS = THREE.RepeatWrapping;
+		graveColorTexture.wrapT = THREE.RepeatWrapping;
+
+		graveARMTexture.repeat.set(0.3, 0.4);
+		graveARMTexture.wrapS = THREE.RepeatWrapping;
+		graveARMTexture.wrapT = THREE.RepeatWrapping;
+
+		graveHeightTexture.repeat.set(0.3, 0.4);
+		graveHeightTexture.wrapS = THREE.RepeatWrapping;
+		graveHeightTexture.wrapT = THREE.RepeatWrapping;
+
+		graveNormalsTexture.repeat.set(0.3, 0.4);
+		graveNormalsTexture.wrapS = THREE.RepeatWrapping;
+		graveNormalsTexture.wrapT = THREE.RepeatWrapping;
+
 		const graveGeometry = new THREE.BoxGeometry(0.4, 0.8, 0.15);
 		const graveMaterial = new THREE.MeshStandardMaterial({
-			color: 0x4f4f4f
+			// color: 0x4f4f4f,
+			map: graveColorTexture,
+			aoMap: graveARMTexture,
+			roughnessMap: graveARMTexture,
+			metalnessMap: graveARMTexture,
+			normalMap: graveNormalsTexture
+			// displacementMap: graveHeightTexture
+			// displacementScale: 0
+			// displacementBias: -0.5
 		});
 
 		const TOTAL_GRAVES = 30;
