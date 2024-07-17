@@ -17,9 +17,9 @@
 
 		const textureLoader = new THREE.TextureLoader();
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+		const ambientLight = new THREE.AmbientLight(0x86cdff, 0.1);
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+		const directionalLight = new THREE.DirectionalLight(0x86cdff, 0.5);
 
 		scene.add(ambientLight, directionalLight);
 
@@ -86,6 +86,12 @@
 
 		const houseGroup = new THREE.Group();
 		scene.add(houseGroup);
+
+		const houseLight = new THREE.PointLight(0xff7d46, 5);
+		houseGroup.add(houseLight);
+
+		houseLight.position.y = 2.4;
+		houseLight.position.z = 2.1;
 
 		const wallColorTexture = textureLoader.load('/textures/walls/medieval_red_brick_diff_1k.jpg');
 		const wallNormalTexture = textureLoader.load(
